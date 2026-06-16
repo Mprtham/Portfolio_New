@@ -1,0 +1,101 @@
+---
+import CaseStudy from '../../layouts/CaseStudy.astro';
+---
+
+<CaseStudy
+  title="Sentinel — Real-Time Anomaly Detection Agent"
+  description="A four-node LangGraph agent that ingests 100+ events/sec from a Kafka stream, detects statistical anomalies via DuckDB, and generates AI root-cause reports in under 90 seconds — with a live WebSocket dashboard."
+  role="AI Systems Engineer · Data Engineer"
+  period="2025"
+  stack={['LangGraph', 'Groq (Llama 3.3 70B)', 'DuckDB', 'Redpanda/Kafka', 'FastAPI', 'WebSocket', 'Docker']}
+  outcome="<10% false-positive rate · <90s root-cause report · 100+ events/sec sustained throughput · Live WebSocket feed"
+  codeUrl="https://github.com/Mprtham/Real-Time-Anomaly-Detection-Agent"
+>
+
+  <h2>The question</h2>
+  <p>
+    Standard anomaly detection pipelines flag an alert. Then someone has to investigate it — pulling logs, querying databases, forming a hypothesis, writing it up. That last mile often takes hours. Could an AI agent close the gap: detect the anomaly <em>and</em> produce a root-cause report fast enough to be actionable in a real-time ops context?
+  </p>
+  <p>
+    The constraint: it had to run on commodity hardware (no GPU), process a high-velocity stream, and keep the false-positive rate low enough that on-call engineers wouldn't learn to ignore it.
+  </p>
+
+  <h2>The approach</h2>
+
+  <h3>Stream ingestion (Redpanda/Kafka)</h3>
+  <p>
+    Events — simulating application metrics, user behaviour signals, and infrastructure telemetry — are produced to a Redpanda topic at 100+ events/sec. A consumer service reads from the topic and batches events into a DuckDB in-process analytical store. Redpanda was chosen over vanilla Kafka for its lower operational overhead in a single-node development context while maintaining the Kafka protocol.
+  </p>
+
+  <h3>Statistical detection (DuckDB)</h3>
+  <p>
+    DuckDB runs Z-score and rolling-window IQR detection directly in-process — no round trip to an external database. Detection queries run on sliding windows of the last 60 seconds of events. A signal is flagged only when both methods agree, which is the primary driver of the sub-10% false-positive rate.
+  </p>
+
+  <h3>LangGraph agent (4 nodes)</h3>
+  <p>
+    Once an anomaly is confirmed, the LangGraph pipeline kicks in:
+  </p>
+  <ul>
+    <li><strong>Context node:</strong> pulls the surrounding event window and computes summary statistics</li>
+    <li><strong>Hypothesis node:</strong> Groq-hosted Llama 3.3 70B generates ranked hypotheses based on the statistical pattern and event metadata</li>
+    <li><strong>Evidence node:</strong> queries DuckDB for corroborating signals (correlated metrics, prior occurrences, baseline comparisons)</li>
+    <li><strong>Report node:</strong> synthesises context, hypotheses, and evidence into a structured root-cause report with confidence scores and recommended actions</li>
+  </ul>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <span class="stat-num">&lt;90s</span>
+      <span class="stat-lbl">Detection to report</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">&lt;10%</span>
+      <span class="stat-lbl">False-positive rate</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">100+</span>
+      <span class="stat-lbl">Events/sec</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">4</span>
+      <span class="stat-lbl">Agent nodes</span>
+    </div>
+  </div>
+
+  <h3>Live dashboard (FastAPI + WebSocket)</h3>
+  <p>
+    A FastAPI server streams anomaly alerts and agent reports to a WebSocket-connected frontend in real time. The dashboard shows the live event stream, flagged anomalies highlighted in context, and the full agent report rendered as it's generated — token by token via streaming inference on Groq.
+  </p>
+
+  <h2>Architecture</h2>
+  <div class="arch-block">
+    Event Producers (100+ events/sec)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    Redpanda Topic (Kafka protocol)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    Consumer → DuckDB (in-process OLAP)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Z-score + IQR detection<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    LangGraph Agent: Context → Hypothesis → Evidence → Report<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FastAPI + WebSocket<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Live Dashboard (streaming report)
+  </div>
+
+  <h2>What broke / what I'd change</h2>
+  <p>
+    <strong>DuckDB memory pressure at sustained throughput.</strong> DuckDB's in-process model is excellent for analytical queries but the event buffer needed careful windowing to prevent unbounded memory growth at 100+ events/sec. The fix was a scheduled compaction job that evicts events older than 10 minutes — simple but not obvious from the documentation.
+  </p>
+  <p>
+    <strong>LLM latency is the pipeline's critical path.</strong> Groq's inference is fast (sub-second token generation), but the hypothesis and evidence nodes involve sequential LLM calls. The report latency is almost entirely inference time. The next version would parallelise the hypothesis and evidence nodes using LangGraph's built-in parallel branch support.
+  </p>
+  <p>
+    <strong>False-positive tuning is empirical.</strong> The dual-method approach (Z-score AND IQR) was the most effective lever for reducing false positives — but the thresholds were tuned by running the system against synthetic data with known anomalies. In production, that tuning would need to happen against real traffic patterns per metric type.
+  </p>
+
+</CaseStudy>

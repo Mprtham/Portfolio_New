@@ -1,0 +1,99 @@
+---
+import CaseStudy from '../../layouts/CaseStudy.astro';
+---
+
+<CaseStudy
+  title="Agentic Data Analyst"
+  description="An autonomous analyst agent that runs end-to-end statistical analysis on tabular data — a ReAct loop over a registry of statistical tests, sandboxed Python execution, and auto-generated reports. The analyst that never needs a brief."
+  role="AI Systems Engineer"
+  period="2025"
+  stack={['ReAct', 'Claude Sonnet', 'FastAPI', 'Typer', 'Polars', 'Plotly', 'ChromaDB', 'Docker sandbox']}
+  outcome="Full end-to-end statistical analysis in under 60s · sandboxed code execution · auto-generated reports with charts"
+  codeUrl="https://github.com/Mprtham/Agentic-Data-Analyst"
+>
+
+  <h2>The question</h2>
+  <p>
+    A data analyst's time is dominated by the repetitive middle layer of analytical work: load the data, check the distributions, run the appropriate statistical tests, generate visualisations, write it up. It's not creative — it's procedural. Could a ReAct agent with access to a registry of statistical tools handle this layer autonomously, freeing analysts to focus on interpretation and decision-making?
+  </p>
+  <p>
+    The secondary constraint: code execution had to be sandboxed. Letting an LLM write and run arbitrary Python on a shared server is a security risk. The agent needed to run in an isolated container with no network access and resource limits.
+  </p>
+
+  <h2>The approach</h2>
+
+  <h3>ReAct loop over a tool registry</h3>
+  <p>
+    The agent follows the ReAct (Reason + Act) pattern: it reasons about the data, selects the appropriate tool from a registry, executes it, observes the result, and reasons about what to do next. The tool registry includes:
+  </p>
+  <ul>
+    <li>Descriptive statistics (summary, distributions, outlier detection)</li>
+    <li>Correlation analysis (Pearson, Spearman, point-biserial)</li>
+    <li>Group comparison (t-test, ANOVA, Mann-Whitney U, Kruskal-Wallis)</li>
+    <li>Categorical analysis (chi-square, Fisher's exact)</li>
+    <li>Time series decomposition (trend, seasonality, stationarity)</li>
+    <li>Visualisation (Plotly histograms, scatter plots, heatmaps, time series)</li>
+    <li>Python execution (arbitrary Polars/pandas code in a sandbox)</li>
+  </ul>
+  <p>
+    The agent selects which tests to run based on the data types it detects — it won't run a t-test on a categorical variable. This type-aware routing reduces hallucination-driven errors significantly.
+  </p>
+
+  <h3>Sandboxed execution (Docker)</h3>
+  <p>
+    The Python execution tool runs code in a Docker container with no network access, 512MB memory limit, and a 30-second timeout. The container is spawned per execution and destroyed immediately after. Results (stdout, generated files) are passed back to the agent as observation context.
+  </p>
+
+  <h3>ChromaDB for context memory</h3>
+  <p>
+    Prior analysis results are embedded and stored in ChromaDB so the agent can retrieve relevant context across a session — if it ran a correlation analysis in step 2, it can reference those results when deciding which follow-up tests to run in step 6 without re-running them.
+  </p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <span class="stat-num">&lt;60s</span>
+      <span class="stat-lbl">Full analysis runtime</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">7</span>
+      <span class="stat-lbl">Tool categories</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">Sandboxed</span>
+      <span class="stat-lbl">Docker execution</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">Auto</span>
+      <span class="stat-lbl">Report generation</span>
+    </div>
+  </div>
+
+  <h2>Architecture</h2>
+  <div class="arch-block">
+    User uploads CSV / points to dataset<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    FastAPI / Typer CLI ──→ ReAct Agent (Claude Sonnet)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tool Registry (stats + viz + exec)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── Polars (data ops)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── Docker sandbox (code exec)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├── Plotly (charts → PNG/HTML)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└── ChromaDB (session memory)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Markdown report + charts
+  </div>
+
+  <h2>What broke / what I'd change</h2>
+  <p>
+    <strong>Tool selection errors on ambiguous data.</strong> The agent occasionally selected the wrong statistical test for edge cases — running a Pearson correlation on a heavily skewed variable where Spearman was more appropriate. Adding a pre-flight data characterisation step (normality test, skewness check) before tool selection reduced this significantly.
+  </p>
+  <p>
+    <strong>Sandbox cold start latency.</strong> Docker container startup adds ~2–3 seconds per execution. For a session with 10+ code executions this is noticeable. A warm container pool (pre-started, reused per session, destroyed at session end) would fix this.
+  </p>
+  <p>
+    <strong>Report quality is the output that matters.</strong> Early versions produced technically correct analyses but poorly structured reports — too much raw output, not enough narrative. Investing in the report generation prompt and adding a dedicated "narrative synthesis" node at the end of the ReAct loop produced dramatically better output.
+  </p>
+
+</CaseStudy>

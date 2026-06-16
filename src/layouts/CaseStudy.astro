@@ -1,0 +1,317 @@
+---
+import Layout from './Layout.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  role: string;
+  period: string;
+  stack: string[];
+  outcome: string;
+  liveUrl?: string;
+  codeUrl?: string;
+  ogTitle?: string;
+}
+
+const { title, description, role, period, stack, outcome, liveUrl, codeUrl, ogTitle } = Astro.props;
+---
+
+<Layout title={`${title} — Prathamesh Mishra`} description={description}>
+  <main style="padding-top: 80px;">
+    <!-- Back nav -->
+    <div class="cs-back container">
+      <a href="/#work" class="back-link mono">← Back to work</a>
+    </div>
+
+    <!-- Header -->
+    <header class="cs-header">
+      <div class="container">
+        <div class="cs-meta reveal">
+          <span class="section-label" style="margin-bottom: 0;">{role}</span>
+          <span class="mono" style="font-size: 0.78rem; color: var(--text-lo);">{period}</span>
+        </div>
+        <h1 class="cs-title reveal">{title}</h1>
+        <p class="cs-desc reveal">{description}</p>
+
+        <div class="cs-header-footer reveal">
+          <div class="cs-stack">
+            {stack.map(s => <span class="chip">{s}</span>)}
+          </div>
+          <div class="cs-links">
+            {liveUrl && (
+              <a href={liveUrl} target="_blank" rel="noopener" class="cs-link-btn primary">
+                View Product ↗
+              </a>
+            )}
+            {codeUrl && (
+              <a href={codeUrl} target="_blank" rel="noopener" class="cs-link-btn secondary">
+                View Code ↗
+              </a>
+            )}
+          </div>
+        </div>
+
+        <div class="cs-outcome reveal">
+          <span class="mono" style="font-size: 0.7rem; color: var(--signal); text-transform: uppercase; letter-spacing: 0.1em;">Key outcome</span>
+          <span class="cs-outcome-val">{outcome}</span>
+        </div>
+      </div>
+    </header>
+
+    <hr class="hairline" />
+
+    <!-- Case study body -->
+    <article class="cs-body container">
+      <slot />
+    </article>
+
+    <!-- Footer nav -->
+    <div class="cs-footer-nav container">
+      <a href="/#work" class="back-link mono">← All projects</a>
+      <a href="/#contact" class="cs-link-btn primary">Work with me →</a>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .cs-back {
+    padding-top: 24px;
+    padding-bottom: 8px;
+  }
+
+  .back-link {
+    font-size: 0.78rem;
+    color: var(--text-lo);
+    transition: color 200ms;
+  }
+
+  .back-link:hover {
+    color: var(--signal);
+  }
+
+  .cs-header {
+    padding: clamp(32px, 5vw, 80px) 0 clamp(32px, 5vw, 64px);
+  }
+
+  .cs-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 16px;
+  }
+
+  .cs-title {
+    font-size: var(--step-3);
+    margin-bottom: 20px;
+    max-width: 800px;
+  }
+
+  .cs-desc {
+    font-size: var(--step-1);
+    color: var(--text-mid);
+    max-width: 680px;
+    line-height: 1.65;
+    margin-bottom: 32px;
+  }
+
+  .cs-header-footer {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .cs-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .cs-links {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+
+  .cs-link-btn {
+    padding: 9px 18px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.85rem;
+    border-radius: 2px;
+    transition: opacity 200ms, background 200ms, color 200ms;
+    white-space: nowrap;
+  }
+
+  .cs-link-btn.primary {
+    background: var(--signal);
+    color: var(--signal-ink);
+  }
+
+  .cs-link-btn.primary:hover { opacity: 0.85; }
+
+  .cs-link-btn.secondary {
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text-mid);
+  }
+
+  .cs-link-btn.secondary:hover {
+    border-color: var(--text-lo);
+    color: var(--text-hi);
+  }
+
+  .cs-outcome {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 20px 24px;
+    background: var(--ink-800);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--signal);
+    border-radius: 2px;
+    max-width: 640px;
+  }
+
+  .cs-outcome-val {
+    font-size: 0.95rem;
+    color: var(--text-hi);
+    line-height: 1.5;
+  }
+
+  /* Body prose */
+  .cs-body {
+    padding-top: 64px;
+    padding-bottom: 64px;
+    max-width: 800px;
+  }
+
+  .cs-body :global(h2) {
+    font-size: var(--step-2);
+    margin-top: 56px;
+    margin-bottom: 16px;
+    color: var(--text-hi);
+  }
+
+  .cs-body :global(h3) {
+    font-size: var(--step-1);
+    margin-top: 36px;
+    margin-bottom: 12px;
+    color: var(--text-hi);
+  }
+
+  .cs-body :global(p) {
+    color: var(--text-mid);
+    line-height: 1.8;
+    margin-bottom: 16px;
+    font-size: 0.97rem;
+  }
+
+  .cs-body :global(ul), .cs-body :global(ol) {
+    padding-left: 24px;
+    margin-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cs-body :global(li) {
+    color: var(--text-mid);
+    line-height: 1.7;
+    font-size: 0.97rem;
+  }
+
+  .cs-body :global(strong) {
+    color: var(--text-hi);
+    font-weight: 600;
+  }
+
+  .cs-body :global(.stat-row) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    margin: 32px 0;
+  }
+
+  .cs-body :global(.stat-box) {
+    background: var(--ink-800);
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cs-body :global(.stat-num) {
+    font-family: 'JetBrains Mono', monospace;
+    font-variant-numeric: tabular-nums;
+    font-size: var(--step-2);
+    color: var(--signal);
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .cs-body :global(.stat-lbl) {
+    font-size: var(--step--1);
+    color: var(--text-lo);
+  }
+
+  .cs-body :global(.callout) {
+    background: var(--ink-800);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--signal);
+    border-radius: 2px;
+    padding: 20px 24px;
+    margin: 28px 0;
+  }
+
+  .cs-body :global(.callout p) {
+    margin-bottom: 0;
+  }
+
+  .cs-body :global(.arch-block) {
+    background: var(--ink-800);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 32px;
+    margin: 32px 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    line-height: 2;
+    overflow-x: auto;
+  }
+
+  .cs-body :global(.tag) {
+    display: inline-block;
+    padding: 2px 8px;
+    background: rgba(92, 242, 192, 0.08);
+    border: 1px solid rgba(92, 242, 192, 0.25);
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--signal);
+  }
+
+  .cs-footer-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 32px;
+    padding-bottom: 64px;
+    border-top: 1px solid var(--line);
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .cs-header-footer {
+      flex-direction: column;
+    }
+  }
+</style>

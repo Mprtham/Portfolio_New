@@ -1,92 +1,27 @@
 ---
-const clusters = [
-  {
-    name: 'BI & Visualisation',
-    skills: [
-      { name: 'Power BI (DAX, Copilot)', level: 95, label: 'Expert' },
-      { name: 'Tableau', level: 72, label: 'Proficient' },
-      { name: 'Looker Studio', level: 70, label: 'Proficient' },
-      { name: 'Plotly / Recharts', level: 80, label: 'Advanced' },
-      { name: 'Excel (Power Query)', level: 85, label: 'Advanced' },
-    ],
-  },
-  {
-    name: 'Data & SQL',
-    skills: [
-      { name: 'BigQuery', level: 95, label: 'Expert' },
-      { name: 'PostgreSQL', level: 90, label: 'Expert' },
-      { name: 'dbt', level: 82, label: 'Advanced' },
-      { name: 'ETL / ELT pipelines', level: 80, label: 'Advanced' },
-      { name: 'Airflow', level: 65, label: 'Proficient' },
-    ],
-  },
-  {
-    name: 'Analytics & Experimentation',
-    skills: [
-      { name: 'GA4 / Google Analytics', level: 88, label: 'Advanced' },
-      { name: 'A/B Testing (end-to-end)', level: 90, label: 'Expert' },
-      { name: 'Cohort & RFM analysis', level: 88, label: 'Advanced' },
-      { name: 'Forecasting models', level: 82, label: 'Advanced' },
-      { name: 'Statistical testing', level: 80, label: 'Advanced' },
-    ],
-  },
-  {
-    name: 'Python & ML',
-    skills: [
-      { name: 'pandas / NumPy', level: 88, label: 'Advanced' },
-      { name: 'scikit-learn', level: 82, label: 'Advanced' },
-      { name: 'Polars', level: 75, label: 'Proficient' },
-      { name: 'LSTM / Prophet', level: 72, label: 'Proficient' },
-      { name: 'SHAP / model interpretability', level: 75, label: 'Proficient' },
-    ],
-  },
-  {
-    name: 'AI Systems',
-    skills: [
-      { name: 'LangGraph / ReAct agents', level: 85, label: 'Advanced' },
-      { name: 'RAG pipelines', level: 82, label: 'Advanced' },
-      { name: 'Qdrant / ChromaDB', level: 78, label: 'Proficient' },
-      { name: 'Fine-tuning (LoRA / DPO)', level: 72, label: 'Proficient' },
-      { name: 'FastAPI / Docker', level: 82, label: 'Advanced' },
-    ],
-  },
-];
+import SkillsFilter from './react/SkillsFilter';
+
+const stack = ['Power BI', 'BigQuery', 'dbt', 'PostgreSQL', 'GA4', 'Python', 'LangGraph', 'FastAPI', 'Docker', 'scikit-learn', 'SHAP', 'Plotly', 'Tableau', 'Airflow', 'Qdrant', 'ChromaDB', 'Groq', 'Azure OpenAI', 'Langfuse', 'RAGAS', 'Polars', 'Streamlit', 'React', 'GitHub Actions', 'Kafka', 'DuckDB'];
 ---
 
 <section id="skills">
   <div class="container">
     <div class="skills-header reveal">
       <span class="section-label">05 Skills as Systems</span>
-      <h2 class="skills-title">What I reach for<br />and how deep I go.</h2>
+      <div class="skills-title-row">
+        <h2 class="skills-title">What I reach for<br />and how deep I go.</h2>
+        <p class="skills-hint mono">Filter by project →</p>
+      </div>
     </div>
 
-    <div class="skills-grid">
-      {clusters.map((cluster, ci) => (
-        <div class="cluster card reveal" style={`animation-delay: ${ci * 80}ms`}>
-          <h3 class="cluster-name">{cluster.name}</h3>
-          <div class="skill-list">
-            {cluster.skills.map((skill) => (
-              <div class="skill-row">
-                <div class="skill-meta">
-                  <span class="skill-name">{skill.name}</span>
-                  <span class="skill-label mono">{skill.label}</span>
-                </div>
-                <div class="skill-bar-track" role="progressbar" aria-valuenow={skill.level} aria-valuemin={0} aria-valuemax={100} aria-label={`${skill.name}: ${skill.label}`}>
-                  <div class="skill-bar-fill" style={`width: ${skill.level}%`}></div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+    <div class="reveal" style="animation-delay: 100ms;">
+      <SkillsFilter client:visible />
     </div>
 
     <!-- Stack marquee -->
-    <div class="stack-marquee reveal" style="animation-delay: 400ms;" aria-label="Full technology stack">
+    <div class="stack-marquee reveal" style="animation-delay: 200ms;" aria-label="Full technology stack">
       <div class="marquee-track">
-        {['Power BI', 'BigQuery', 'dbt', 'PostgreSQL', 'GA4', 'Python', 'LangGraph', 'FastAPI', 'Docker', 'scikit-learn', 'SHAP', 'Plotly', 'Tableau', 'Airflow', 'Qdrant', 'ChromaDB', 'Groq', 'Azure OpenAI', 'Langfuse', 'RAGAS', 'Polars', 'Streamlit', 'React', 'GitHub Actions', 'Kafka', 'DuckDB',
-          'Power BI', 'BigQuery', 'dbt', 'PostgreSQL', 'GA4', 'Python', 'LangGraph', 'FastAPI', 'Docker', 'scikit-learn', 'SHAP', 'Plotly', 'Tableau', 'Airflow', 'Qdrant', 'ChromaDB', 'Groq', 'Azure OpenAI', 'Langfuse', 'RAGAS', 'Polars', 'Streamlit', 'React', 'GitHub Actions', 'Kafka', 'DuckDB'
-        ].map(t => (
+        {[...stack, ...stack].map(t => (
           <span class="marquee-item mono">{t}</span>
         ))}
       </div>
@@ -96,87 +31,38 @@ const clusters = [
 
 <style>
   .skills-header {
-    margin-bottom: 48px;
+    margin-bottom: 32px;
+  }
+
+  .skills-title-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+    margin-top: 12px;
   }
 
   .skills-title {
     font-size: var(--step-3);
-    margin-top: 12px;
   }
 
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-
-  .cluster {
-    padding: 28px;
-  }
-
-  .cluster-name {
-    font-size: var(--step-0);
-    color: var(--signal);
-    margin-bottom: 20px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--line);
-  }
-
-  .skill-list {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-  }
-
-  .skill-row {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .skill-meta {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-  }
-
-  .skill-name {
-    font-size: 0.83rem;
-    color: var(--text-mid);
-  }
-
-  .skill-label {
-    font-size: 0.68rem;
+  .skills-hint {
+    font-size: var(--step--1);
     color: var(--text-lo);
   }
 
-  .skill-bar-track {
-    height: 2px;
-    background: var(--line);
-    border-radius: 1px;
-    overflow: hidden;
-  }
-
-  .skill-bar-fill {
-    height: 100%;
-    background: var(--signal);
-    border-radius: 1px;
-    transition: width 800ms var(--ease-out);
-  }
-
-  /* Stack marquee */
   .stack-marquee {
     overflow: hidden;
     border: 1px solid var(--line);
     border-radius: 2px;
     padding: 12px 0;
     background: var(--ink-800);
+    margin-top: 32px;
   }
 
   .marquee-track {
     display: flex;
-    gap: 0;
     animation: marquee 28s linear infinite;
     width: max-content;
   }
@@ -201,17 +87,5 @@ const clusters = [
 
   .marquee-item:hover {
     color: var(--text-hi);
-  }
-
-  @media (max-width: 900px) {
-    .skills-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-  }
-
-  @media (max-width: 600px) {
-    .skills-grid {
-      grid-template-columns: 1fr;
-    }
   }
 </style>

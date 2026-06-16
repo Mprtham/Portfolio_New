@@ -1,0 +1,90 @@
+---
+import CaseStudy from '../../layouts/CaseStudy.astro';
+---
+
+<CaseStudy
+  title="PeopleOps Analytics — HR Attrition & Retention Platform"
+  description="End-to-end HR analytics on BigQuery + dbt + Power BI. Predicts who's at risk of leaving before they decide to, and prescribes the intervention — with a leakage-proof point-in-time model and Power BI engineered like production code."
+  role="Data Engineer · ML Engineer · BI Developer"
+  period="2025"
+  stack={['BigQuery', 'dbt', 'Power BI', 'PBIP', 'BPA', 'FastAPI', 'scikit-learn', 'SHAP', 'GitHub Actions']}
+  outcome="ROC-AUC 0.665 · Precision@top-10% 55.1% · 3× PR-AUC over baseline · 75/75 dbt tests passing · Power BI in Git with CI-gated refreshes"
+  codeUrl="https://github.com/Mprtham/peopleops-risk-intelligence"
+>
+
+  <h2>The question</h2>
+  <p>
+    HR teams routinely discover attrition risk too late — after an employee has mentally checked out, or started interviewing elsewhere. The typical response is reactive: exit interviews that confirm what was already visible in the data. The goal here was to flip that: use behavioural and compensation signals to flag risk 60–90 days before it becomes a resignation, with an explainable model HR managers could act on without a data science degree.
+  </p>
+
+  <div class="callout">
+    <p><strong>The hard constraint:</strong> Most attrition models are riddled with data leakage. Features that are only observable <em>after</em> someone decides to leave (e.g. reduced performance ratings, reduced training activity) get included in training — the model looks great in validation but fails in production. I solved this with a strict point-in-time split: training features are only those observable at a fixed snapshot date, with no lookahead.</p>
+  </div>
+
+  <h2>The approach</h2>
+
+  <h3>Data engineering (BigQuery + dbt)</h3>
+  <p>
+    Built a dbt project with three layers — <strong>staging</strong> (clean source tables from the HR system), <strong>intermediate</strong> (point-in-time feature construction, compensation history, tenure calculations), and <strong>marts</strong> (model-ready features + prediction outputs). 75 dbt tests enforce schema contracts, row-count expectations, and referential integrity — so a broken upstream table fails loudly before it corrupts the model.
+  </p>
+
+  <h3>ML model (scikit-learn + SHAP)</h3>
+  <p>
+    Trained a logistic regression with SHAP explainability — deliberately interpretable over a black-box ensemble, because HR managers need to understand <em>why</em> someone is flagged before they'll act on it. The point-in-time split ensures no feature is derived from post-decision data.
+  </p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <span class="stat-num">0.665</span>
+      <span class="stat-lbl">ROC-AUC</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">55.1%</span>
+      <span class="stat-lbl">Precision @ top-10%</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">3×</span>
+      <span class="stat-lbl">PR-AUC over baseline</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">75/75</span>
+      <span class="stat-lbl">dbt tests passing</span>
+    </div>
+  </div>
+
+  <p>
+    <strong>SHAP values</strong> surface the top 3 risk drivers per employee — tenure, pay band vs. market, manager change frequency — displayed directly in the Power BI dashboard so an HR business partner sees not just a risk score but a recommended conversation starter.
+  </p>
+
+  <h3>Power BI engineered like code (PBIP + BPA + CI)</h3>
+  <p>
+    This is the part most BI projects skip. The Power BI file lives in Git as a <strong>PBIP</strong> (Power BI Project) — human-readable JSON, diffable, reviewable. A GitHub Actions workflow runs <strong>Best Practice Analyzer</strong> on every PR, failing the build if any DAX measure violates performance rules (cardinality issues, non-filtered CALCULATE patterns, missing variable declarations). The dbt test suite gates the BigQuery refresh — if any model test fails, the semantic layer does not update and the dashboard surfaces a data-quality warning instead of incorrect KPIs.
+  </p>
+
+  <h2>Architecture</h2>
+  <div class="arch-block">
+    HR System (source) ──→ BigQuery (raw)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dbt (staging → intermediate → marts)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;scikit-learn model&nbsp;&nbsp;&nbsp;&nbsp;Power BI DirectQuery<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SHAP explanations&nbsp;&nbsp;&nbsp;&nbsp;BPA CI + PBIP in Git<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;FastAPI endpoint ──→ Power BI (risk scores + drivers)
+  </div>
+
+  <h2>What broke / what I'd change</h2>
+  <p>
+    <strong>Feature engineering was the hardest part, not the model.</strong> Getting a clean point-in-time view without lookahead required careful thought about which fields in the HR system are updated retroactively (several are). The dbt intermediate layer exists almost entirely to solve this.
+  </p>
+  <p>
+    <strong>Precision@top-10% is the right metric, not AUC.</strong> HR teams act on a shortlist — they're not going to review every flagged employee. Optimising for the top decile of predictions (Precision@10%) reflects how the model is actually used. I should have framed evaluation this way from day one instead of defaulting to AUC first.
+  </p>
+  <p>
+    <strong>Next iteration:</strong> add time-series features (change in tenure trajectory, rolling compensation delta) and experiment with a gradient boosting model. The interpretability cost is manageable with SHAP waterfalls even for tree ensembles.
+  </p>
+
+</CaseStudy>

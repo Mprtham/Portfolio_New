@@ -1,0 +1,99 @@
+---
+import CaseStudy from '../../layouts/CaseStudy.astro';
+---
+
+<CaseStudy
+  title="SecureQuery AI — Secure RAG with RBAC"
+  description="A production-hardened RAG system with defence-in-depth role-based access control — Finance, HR, and C-level tiers each see only their authorised documents. PII masking, JWT authentication, guardrails, and cost tracking baked in. 185 tests in ~2 seconds."
+  role="AI Systems Engineer · Security"
+  period="2025"
+  stack={['FastAPI', 'Qdrant', 'Azure OpenAI', 'Streamlit', 'JWT', 'Presidio (PII)', 'Docker']}
+  outcome="185 tests passing in ~2s · Finance/HR/C-level RBAC · PII masking on all retrieved content · Full cost tracking per query"
+  codeUrl="https://github.com/Mprtham/securequery-ai"
+>
+
+  <h2>The question</h2>
+  <p>
+    Most RAG demos retrieve from a single flat document corpus — anyone asking a question gets access to everything. In any real enterprise context, that's a security problem: a Finance analyst should not be able to retrieve HR compensation data, and neither should have access to the board papers visible only to the C-suite. How do you build a RAG system where access control is enforced at retrieval time, not just at the application layer?
+  </p>
+
+  <div class="callout">
+    <p><strong>Why this matters:</strong> Perimeter-level auth (checking the user's role before they hit the endpoint) is not enough. If the vector store contains mixed-sensitivity documents, a prompt injection or misconfigured retrieval could return unauthorised content. The access control must live at the retrieval layer itself.</p>
+  </div>
+
+  <h2>The approach</h2>
+
+  <h3>Role-based retrieval (Qdrant payload filters)</h3>
+  <p>
+    Documents are ingested into Qdrant with a <code>clearance_level</code> payload field — <span class="tag">finance</span>, <span class="tag">hr</span>, <span class="tag">executive</span>, or combinations. Every retrieval query is automatically filtered by the authenticated user's role: a Finance user's query physically cannot return HR or executive documents, because the Qdrant filter is applied before the nearest-neighbour search. The LLM never sees unauthorised content.
+  </p>
+
+  <h3>JWT authentication</h3>
+  <p>
+    Users authenticate via JWT tokens with role claims embedded. The FastAPI middleware validates the token and extracts the role on every request — no session state, stateless by design. Tokens are short-lived (15 minutes) with refresh token rotation.
+  </p>
+
+  <h3>PII masking (Microsoft Presidio)</h3>
+  <p>
+    Retrieved document chunks pass through a Presidio analyser before being included in the LLM context. Names, email addresses, phone numbers, NI numbers, and bank account patterns are masked with entity-type placeholders — <code>[PERSON]</code>, <code>[EMAIL]</code> — before the LLM sees them. The original content is never in the prompt.
+  </p>
+
+  <h3>Guardrails + cost tracking</h3>
+  <p>
+    Input and output guardrails check for prompt injection attempts, off-topic queries, and policy violations. Every query logs token counts and estimated cost (input tokens + output tokens × Azure OpenAI pricing) to a SQLite store — surfaced in a Streamlit admin dashboard so you can see cost per role, per query type, and per document corpus.
+  </p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <span class="stat-num">185</span>
+      <span class="stat-lbl">Tests passing</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">~2s</span>
+      <span class="stat-lbl">Full test suite runtime</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">3</span>
+      <span class="stat-lbl">Access tiers</span>
+    </div>
+    <div class="stat-box">
+      <span class="stat-num">PII</span>
+      <span class="stat-lbl">Masked at retrieval</span>
+    </div>
+  </div>
+
+  <h2>Architecture</h2>
+  <div class="arch-block">
+    User request + JWT<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    FastAPI middleware (JWT validation → role extraction)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    Input guardrails (injection detection, topic filter)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    Qdrant retrieval (payload filter: role ∩ clearance_level)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    Presidio PII masking<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    Azure OpenAI (context + query → answer)<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br />
+    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;▼<br />
+    Output guardrails + cost logging → response
+  </div>
+
+  <h2>What broke / what I'd change</h2>
+  <p>
+    <strong>Presidio false positives on domain-specific terminology.</strong> Financial instrument names and internal product codes triggered PII detection. The fix was a custom allowlist of known non-PII entities — straightforward once identified, but it required careful review of masked output across a diverse document set.
+  </p>
+  <p>
+    <strong>The 185 tests run fast because of fixture isolation.</strong> Every test that touches Qdrant uses a dedicated test collection, spun up and torn down per test. This was non-trivial to set up but made the suite genuinely reliable — no test leaks state to another. The ~2s runtime is a result of this discipline, not in spite of it.
+  </p>
+  <p>
+    <strong>Production consideration — encryption at rest.</strong> Qdrant supports encrypted collections but it adds operational complexity. In a real deployment, document clearance levels should be combined with encrypted storage and audit logging of every retrieval — who queried what, when. The cost tracking layer in this build is the foundation for that audit trail.
+  </p>
+
+</CaseStudy>
