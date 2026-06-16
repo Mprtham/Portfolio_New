@@ -1,13 +1,14 @@
 ---
 const metrics = [
-  { value: '+30%', label: 'organic acquisition', context: '~12k → 15.6k monthly sign-ups in 4 months via segmentation + A/B testing', where: 'Pharmaceutical UK Ltd', dir: 'up' },
-  { value: '−22%', label: 'CAC reduction', context: 'Customer acquisition cost reduced within the same acquisition programme', where: 'Pharmaceutical UK Ltd', dir: 'up' },
-  { value: '±8%', label: 'forecast accuracy', context: 'SQL predictive models informing ~£200K revenue targeting', where: 'Pharmaceutical UK Ltd', dir: 'up' },
-  { value: '+12%', label: 'retention', context: 'Cohort + RFM segmentation on 50k+ MAU driving repeat engagement', where: 'Pharmaceutical UK Ltd', dir: 'up' },
-  { value: '−50%', label: 'manual reporting time', context: 'Automated SQL/Python pipelines replacing manual data extraction', where: 'Pharmaceutical UK Ltd', dir: 'up' },
-  { value: '20+', label: 'experiments shipped', context: 'End-to-end A/B analysis feeding directly into product roadmap', where: 'Smallcap Networks', dir: 'neutral' },
-  { value: '1M+', label: 'records modelled', context: 'Behavioural insight pipeline driving churn reduction initiatives', where: 'Smallcap Networks', dir: 'neutral' },
+  { value: '+30%', label: 'organic acquisition', context: '~12k → 15.6k monthly sign-ups in 4 months via segmentation + A/B testing', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
+  { value: '−22%', label: 'CAC reduction', context: 'Customer acquisition cost reduced within the same acquisition programme', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
+  { value: '±8%', label: 'forecast accuracy', context: 'SQL predictive models informing ~£200K revenue targeting', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
+  { value: '+12%', label: 'retention', context: 'Cohort + RFM segmentation on 50k+ MAU driving repeat engagement', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
+  { value: '2wk → 2day', label: 'reporting cycle', context: 'Automated SQL/Python pipelines compressed fortnightly reporting to 48-hour delivery', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
+  { value: '20+', label: 'experiments shipped', context: 'End-to-end A/B analysis feeding directly into product roadmap', where: 'Small Cap Network', dir: 'neutral' },
+  { value: '1M+', label: 'records modelled', context: 'Behavioural insight pipeline driving churn reduction initiatives', where: 'Small Cap Network', dir: 'neutral' },
   { value: '+9%', label: 'repeat bookings', context: 'Cohort analysis on 12 months of booking data revealing retention levers', where: 'Hampton by Hilton', dir: 'up' },
+  { value: '£1.3M', label: 'revenue contribution', context: 'Total verified revenue impact across all client engagements', where: 'Cross-engagement', dir: 'up' },
 ];
 ---
 
@@ -39,10 +40,6 @@ const metrics = [
       ))}
     </div>
 
-    <p class="impact-note reveal" style="animation-delay: 480ms;">
-      <span class="mono" style="color: var(--signal); font-size: 0.8rem;">£1.3M</span>
-      <span style="color: var(--text-lo); font-size: 0.85rem; margin-left: 8px;">total revenue contribution across engagements</span>
-    </p>
   </div>
 </section>
 
@@ -73,7 +70,7 @@ const metrics = [
 
   .impact-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(3, 1fr);
     gap: 1px;
     background: var(--line);
     border: 1px solid var(--line);

@@ -13,8 +13,10 @@
   },
   "dependencies": {
     "@astrojs/react": "^5.0.7",
+    "@astrojs/sitemap": "^3.7.3",
     "@fontsource/inter": "^5.2.8",
     "@fontsource/jetbrains-mono": "^5.2.8",
+    "@fontsource/poppins": "^5.2.7",
     "@fontsource/space-grotesk": "^5.2.10",
     "@tailwindcss/vite": "^4.3.1",
     "@types/react": "^19.2.17",

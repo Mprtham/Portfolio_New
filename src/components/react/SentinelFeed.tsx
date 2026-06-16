@@ -116,7 +116,7 @@ export default function SentinelFeed() {
       <div className="sf-header">
         <div className="sf-live">
           <span className="sf-dot" />
-          <span className="sf-live-label mono">LIVE</span>
+          <span className="sf-live-label mono">SIM · replayed event stream</span>
         </div>
         <span className="sf-title mono">sentinel · anomaly detection feed</span>
         <button
