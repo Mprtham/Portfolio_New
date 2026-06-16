@@ -1,0 +1,320 @@
+---
+const metrics = [
+  { value: '+30%', label: 'organic acquisition' },
+  { value: '−22%', label: 'CAC reduction' },
+  { value: '±8%', label: 'forecast accuracy' },
+  { value: '1M+', label: 'records modelled' },
+  { value: '20+', label: 'A/B tests shipped' },
+  { value: '£1.3M', label: 'revenue contribution' },
+];
+---
+
+<section id="home" class="hero">
+  <!-- Ambient sparkline SVG -->
+  <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
+
+  <div class="container hero-inner">
+    <div class="hero-eyebrow mono hero-animate" style="--delay: 0ms">
+      <span class="dot"></span>
+      London, UK &nbsp;·&nbsp; Open to Data / Product Analyst &amp; AI roles
+    </div>
+
+    <h1 class="hero-name hero-animate" style="--delay: 80ms">PRATHAMESH<br />MISHRA</h1>
+
+    <p class="hero-thesis hero-animate" style="--delay: 160ms">
+      I turn behaviour into decisions.
+    </p>
+
+    <p class="hero-sub hero-animate" style="--delay: 220ms">
+      Data &amp; Product Analyst — Power BI, SQL, GA4 — and a builder of production AI systems.
+    </p>
+
+    <div class="hero-ctas hero-animate" style="--delay: 300ms">
+      <a href="#work" class="btn-primary">See the work ↓</a>
+      <a href="/cv.pdf" target="_blank" rel="noopener" class="btn-secondary">Download CV</a>
+    </div>
+  </div>
+
+  <!-- Metric strip -->
+  <div class="metric-strip" aria-label="Key impact metrics">
+    <div class="metric-track">
+      {[...metrics, ...metrics].map((m) => (
+        <div class="metric-item">
+          <span class="metric-num mono" data-target={m.value}>{m.value}</span>
+          <span class="metric-lbl">{m.label}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 80px;
+    overflow: hidden;
+  }
+
+  .hero-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.18;
+    pointer-events: none;
+  }
+
+  @keyframes heroFadeUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero-animate {
+    animation: heroFadeUp 500ms var(--ease-out) both;
+    animation-delay: var(--delay, 0ms);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-animate { animation: none; }
+  }
+
+  .hero-inner {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .hero-eyebrow {
+    font-size: var(--step--1);
+    color: var(--text-lo);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .dot {
+    width: 7px;
+    height: 7px;
+    background: var(--signal);
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px var(--signal);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .hero-name {
+    font-size: var(--step-4);
+    font-weight: 700;
+    color: var(--text-hi);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    margin-bottom: 28px;
+    animation-delay: 100ms;
+  }
+
+  .hero-thesis {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: var(--step-2);
+    font-weight: 500;
+    color: var(--signal);
+    margin-bottom: 16px;
+    animation-delay: 150ms;
+  }
+
+  .hero-sub {
+    font-size: var(--step-1);
+    color: var(--text-mid);
+    max-width: 560px;
+    line-height: 1.5;
+    margin-bottom: 40px;
+    animation-delay: 200ms;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    animation-delay: 250ms;
+  }
+
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 28px;
+    background: var(--signal);
+    color: var(--signal-ink);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 600;
+    font-size: 0.95rem;
+    border-radius: 2px;
+    transition: opacity 200ms, transform 200ms;
+  }
+
+  .btn-primary:hover {
+    opacity: 0.88;
+    transform: translateY(-1px);
+  }
+
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    padding: 12px 28px;
+    background: transparent;
+    color: var(--text-hi);
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    transition: border-color 200ms, color 200ms;
+  }
+
+  .btn-secondary:hover {
+    border-color: var(--text-lo);
+    color: var(--text-hi);
+  }
+
+  /* Metric strip */
+  .metric-strip {
+    width: 100%;
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+    background: var(--ink-800);
+    padding: 14px 0;
+    flex-shrink: 0;
+  }
+
+  .metric-track {
+    display: flex;
+    gap: 0;
+    animation: marquee 32s linear infinite;
+    width: max-content;
+  }
+
+  .metric-track:hover {
+    animation-play-state: paused;
+  }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+
+  .metric-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 40px;
+    border-right: 1px solid var(--line);
+    white-space: nowrap;
+  }
+
+  .metric-num {
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--signal);
+    letter-spacing: -0.01em;
+  }
+
+  .metric-lbl {
+    font-size: var(--step--1);
+    color: var(--text-lo);
+  }
+</style>
+
+<script>
+  // Ambient sparkline on canvas
+  const canvas = document.getElementById('hero-canvas') as HTMLCanvasElement;
+  if (canvas) {
+    const ctx = canvas.getContext('2d')!;
+    let w = 0, h = 0;
+    let progress = 0;
+    let raf: number;
+
+    const points: number[] = [];
+    const NUM = 120;
+
+    function generatePoints() {
+      points.length = 0;
+      let v = 0.5;
+      for (let i = 0; i < NUM; i++) {
+        v += (Math.random() - 0.5) * 0.08;
+        v = Math.max(0.1, Math.min(0.9, v));
+        points.push(v);
+      }
+    }
+
+    function resize() {
+      w = canvas.offsetWidth;
+      h = canvas.offsetHeight;
+      canvas.width = w * devicePixelRatio;
+      canvas.height = h * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, w, h);
+      const end = Math.floor(progress * NUM);
+      if (end < 2) return;
+
+      const seg = w / (NUM - 1);
+
+      // Draw line
+      ctx.beginPath();
+      ctx.strokeStyle = '#5CF2C0';
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
+      ctx.lineJoin = 'round';
+
+      for (let i = 0; i <= end; i++) {
+        const x = i * seg;
+        const y = h - points[i] * h;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      // Dot at tip
+      if (end > 0) {
+        const tx = (end - 1) * seg;
+        const ty = h - points[end - 1] * h;
+        ctx.beginPath();
+        ctx.arc(tx, ty, 3, 0, Math.PI * 2);
+        ctx.fillStyle = '#5CF2C0';
+        ctx.fill();
+      }
+    }
+
+    function animate() {
+      if (progress < 1) {
+        progress = Math.min(1, progress + 0.004);
+        draw();
+        raf = requestAnimationFrame(animate);
+      }
+    }
+
+    generatePoints();
+    resize();
+    window.addEventListener('resize', () => { resize(); draw(); });
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      animate();
+    } else {
+      progress = 1;
+      draw();
+    }
+  }
+</script>

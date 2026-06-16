@@ -1,0 +1,77 @@
+---
+import '../styles/global.css';
+import Nav from '../components/Nav.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = 'Prathamesh Mishra — Data & Product Analyst | Power BI, SQL, AI Systems',
+  description = 'Data & product analyst in London. Power BI, SQL, GA4 and production AI systems. +30% acquisition, −22% CAC, ±8% forecasting.',
+} = Astro.props;
+
+const ogImage = '/og.png';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+
+    <!-- OG -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <title>{title}</title>
+
+    <!-- JSON-LD Person schema -->
+    <script type="application/ld+json" is:inline>
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Prathamesh Mishra",
+        "jobTitle": "Data & Product Analyst",
+        "url": "https://prathameshmishra.com",
+        "email": "mprathamesh2023@gmail.com",
+        "address": { "@type": "PostalAddress", "addressLocality": "London", "addressCountry": "UK" },
+        "sameAs": [
+          "https://github.com/Mprtham",
+          "https://linkedin.com/in/prathameshmishra07",
+          "https://medium.com/@mishraprathamesh2303"
+        ]
+      }
+    </script>
+
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body>
+    <Nav />
+    <slot />
+    <script>
+      // Scroll reveal
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (e.isIntersecting) {
+              e.target.classList.add('visible');
+              observer.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.1 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+    </script>
+  </body>
+</html>

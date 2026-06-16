@@ -1,0 +1,135 @@
+---
+const chips = [
+  'Executive BI & dashboards',
+  'A/B testing & experimentation',
+  'Product & behavioural analytics (GA4)',
+  'Forecasting & predictive models',
+  'Agentic AI & RAG systems',
+];
+
+const stats = [
+  { value: '4', label: 'Years in data' },
+  { value: '5', label: 'Sectors' },
+  { value: '7', label: 'Shipped AI systems' },
+  { value: 'MSc', label: 'Data Science & AI' },
+];
+---
+
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-left reveal">
+        <span class="section-label">01 About</span>
+        <h2 class="about-heading">
+          The full loop,<br />end to end.
+        </h2>
+      </div>
+
+      <div class="about-right">
+        <p class="about-body reveal">
+          I'm a data analyst who turns user behaviour into commercial outcomes.
+          Over four years across pharma, product and hospitality, I've built the
+          full loop — from the business question, through SQL and Python, to the
+          Power BI dashboard, to the recommendation that changes the decision.
+        </p>
+        <p class="about-body reveal" style="animation-delay: 80ms;">
+          I work in BigQuery and PostgreSQL, model in Python and dbt, and ship
+          executive dashboards people actually use. And because the line between
+          analytics and AI keeps moving, I build production AI systems too:
+          multi-agent pipelines, autonomous analyst agents, real-time anomaly
+          detection, and secure RAG platforms.
+        </p>
+
+        <div class="chips reveal" style="animation-delay: 120ms;" role="list" aria-label="What I build">
+          {chips.map((c) => <span class="chip" role="listitem">{c}</span>)}
+        </div>
+
+        <div class="stat-band reveal" style="animation-delay: 160ms;">
+          {stats.map((s) => (
+            <div class="stat-item">
+              <span class="stat-value mono">{s.value}</span>
+              <span class="stat-label">{s.label}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr;
+    gap: 64px;
+    align-items: start;
+  }
+
+  .about-heading {
+    font-size: var(--step-3);
+    margin-top: 12px;
+  }
+
+  .about-body {
+    color: var(--text-mid);
+    line-height: 1.75;
+    margin-bottom: 20px;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 24px;
+    margin-bottom: 40px;
+  }
+
+  .stat-band {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .stat-item {
+    background: var(--ink-800);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 12px;
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: var(--step-2);
+    font-weight: 700;
+    color: var(--signal);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .stat-label {
+    font-size: var(--step--1);
+    color: var(--text-lo);
+  }
+
+  @media (max-width: 768px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+      gap: 32px;
+    }
+
+    .stat-band {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .stat-band {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>

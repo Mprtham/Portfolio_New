@@ -1,0 +1,173 @@
+---
+const links = [
+  { href: '#about', label: '01 About' },
+  { href: '#impact', label: '02 Impact' },
+  { href: '#work', label: '03 Work' },
+  { href: '#experience', label: '04 Experience' },
+  { href: '#skills', label: '05 Skills' },
+  { href: '#contact', label: '07 Contact' },
+];
+---
+
+<nav class="nav" id="nav" aria-label="Main navigation">
+  <div class="nav-inner container">
+    <a href="#home" class="nav-logo" aria-label="Back to top">
+      <span class="mono" style="color: var(--signal); font-size: 0.85rem;">PM</span>
+    </a>
+
+    <ul class="nav-links" role="list">
+      {links.map((l) => (
+        <li>
+          <a href={l.href} class="nav-link">{l.label}</a>
+        </li>
+      ))}
+    </ul>
+
+    <a href="/cv.pdf" class="nav-cta" target="_blank" rel="noopener">Download CV</a>
+
+    <button class="nav-hamburger" aria-label="Toggle menu" id="nav-toggle">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<style>
+  .nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    height: 64px;
+    background: rgba(10, 12, 15, 0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--line);
+    transition: background 300ms;
+  }
+
+  .nav-inner {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
+
+  .nav-logo {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--text-hi);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    list-style: none;
+    margin-left: auto;
+  }
+
+  .nav-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-lo);
+    padding: 6px 10px;
+    border-radius: 4px;
+    transition: color 200ms, background 200ms;
+    white-space: nowrap;
+  }
+
+  .nav-link:hover {
+    color: var(--text-hi);
+    background: var(--ink-700);
+  }
+
+  .nav-cta {
+    flex-shrink: 0;
+    padding: 7px 16px;
+    background: transparent;
+    border: 1px solid var(--signal);
+    border-radius: 2px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--signal);
+    transition: background 200ms, color 200ms;
+    white-space: nowrap;
+  }
+
+  .nav-cta:hover {
+    background: var(--signal);
+    color: var(--signal-ink);
+  }
+
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    margin-left: auto;
+  }
+
+  .nav-hamburger span {
+    display: block;
+    width: 22px;
+    height: 2px;
+    background: var(--text-mid);
+    border-radius: 1px;
+    transition: all 200ms;
+  }
+
+  @media (max-width: 768px) {
+    .nav-links {
+      display: none;
+      position: fixed;
+      top: 64px;
+      left: 0;
+      right: 0;
+      background: var(--ink-800);
+      border-bottom: 1px solid var(--line);
+      flex-direction: column;
+      padding: 16px;
+      gap: 4px;
+      margin: 0;
+    }
+
+    .nav-links.open {
+      display: flex;
+    }
+
+    .nav-link {
+      font-size: 0.875rem;
+      padding: 10px 12px;
+      width: 100%;
+    }
+
+    .nav-cta {
+      display: none;
+    }
+
+    .nav-hamburger {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const links = document.querySelector('.nav-links');
+
+  toggle?.addEventListener('click', () => {
+    links?.classList.toggle('open');
+  });
+
+  document.querySelectorAll('.nav-link').forEach((link) => {
+    link.addEventListener('click', () => links?.classList.remove('open'));
+  });
+</script>

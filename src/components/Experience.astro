@@ -1,0 +1,197 @@
+---
+const roles = [
+  {
+    title: 'Data Analyst',
+    company: 'Pharmaceutical UK Ltd',
+    period: 'Jan 2025 – Present',
+    description: 'Built the full analytics loop — SQL segmentation pipelines, A/B testing framework, and Power BI executive dashboards — driving +30% organic acquisition and −22% CAC inside 4 months. Managed GDPR-compliant data flows and ±8% demand-forecast models informing £200K+ revenue targeting.',
+    highlights: ['+30% acquisition', '−22% CAC', '±8% forecast'],
+  },
+  {
+    title: 'Data Scientist',
+    company: 'Smallcap Networks',
+    period: 'Aug 2024 – Apr 2025',
+    description: 'Ran 20+ end-to-end A/B experiments feeding directly into the product roadmap. Modelled 1M+ user behavioural records for churn reduction. Built Python/SQL pipelines turning raw event data into stakeholder-ready insights within 2-day SLAs.',
+    highlights: ['20+ A/B tests', '1M+ records', '2-day SLA'],
+  },
+  {
+    title: 'Operations Analyst (Contract)',
+    company: 'Hampton by Hilton',
+    period: 'Sep 2024 – Mar 2025',
+    description: 'Cohort analysis on 12 months of booking data identified key retention levers, driving +9% repeat bookings. Built automated reporting pipelines that cut weekly manual effort by 50%.',
+    highlights: ['+9% repeat bookings', '−50% reporting time'],
+  },
+  {
+    title: 'Python Developer',
+    company: 'Sahu Technologies',
+    period: '2022 – 2023',
+    description: 'Developed automation scripts and data processing pipelines in Python. Worked across ETL workflows and internal tooling, building the engineering foundation that underpins later ML and analytics work.',
+    highlights: ['Python pipelines', 'ETL automation'],
+  },
+  {
+    title: 'Data Science Intern',
+    company: 'Zotech',
+    period: '2021 – 2022',
+    description: 'First industry exposure to end-to-end data science workflow — from data collection through modelling to business reporting. Delivered predictive models for internal use cases and began building the Python/SQL toolkit.',
+    highlights: ['ML models', 'SQL reporting'],
+  },
+];
+---
+
+<section id="experience">
+  <div class="container">
+    <div class="exp-header reveal">
+      <span class="section-label">04 Experience</span>
+      <h2 class="exp-title">Four years.<br />Five sectors.</h2>
+    </div>
+
+    <div class="timeline">
+      {roles.map((role, i) => (
+        <div class="timeline-item reveal" style={`animation-delay: ${i * 80}ms`}>
+          <div class="tl-marker">
+            <div class="tl-dot"></div>
+            {i < roles.length - 1 && <div class="tl-line"></div>}
+          </div>
+          <div class="tl-content card">
+            <div class="tl-top">
+              <div>
+                <h3 class="tl-title">{role.title}</h3>
+                <div class="tl-meta">
+                  <span class="tl-company">{role.company}</span>
+                  <span class="tl-sep">·</span>
+                  <span class="tl-period mono">{role.period}</span>
+                </div>
+              </div>
+              <div class="tl-highlights">
+                {role.highlights.map(h => (
+                  <span class="hl-chip mono">{h}</span>
+                ))}
+              </div>
+            </div>
+            <p class="tl-desc">{role.description}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .exp-header {
+    margin-bottom: 48px;
+  }
+
+  .exp-title {
+    font-size: var(--step-3);
+    margin-top: 12px;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 32px 1fr;
+    gap: 20px;
+  }
+
+  .tl-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 28px;
+  }
+
+  .tl-dot {
+    width: 10px;
+    height: 10px;
+    background: var(--signal);
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 8px rgba(92, 242, 192, 0.4);
+  }
+
+  .tl-line {
+    flex: 1;
+    width: 1px;
+    background: var(--line);
+    margin-top: 8px;
+    margin-bottom: 8px;
+  }
+
+  .tl-content {
+    padding: 28px;
+    margin-bottom: 16px;
+  }
+
+  .tl-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+
+  .tl-title {
+    font-size: var(--step-1);
+    margin-bottom: 6px;
+  }
+
+  .tl-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tl-company {
+    font-size: 0.88rem;
+    color: var(--text-mid);
+  }
+
+  .tl-sep {
+    color: var(--text-lo);
+  }
+
+  .tl-period {
+    font-size: 0.78rem;
+    color: var(--text-lo);
+  }
+
+  .tl-highlights {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  .hl-chip {
+    font-size: 0.7rem;
+    padding: 3px 8px;
+    background: rgba(92, 242, 192, 0.08);
+    border: 1px solid rgba(92, 242, 192, 0.25);
+    border-radius: 2px;
+    color: var(--signal);
+    white-space: nowrap;
+  }
+
+  .tl-desc {
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    line-height: 1.7;
+  }
+
+  @media (max-width: 600px) {
+    .tl-top {
+      flex-direction: column;
+    }
+
+    .tl-highlights {
+      justify-content: flex-start;
+    }
+  }
+</style>

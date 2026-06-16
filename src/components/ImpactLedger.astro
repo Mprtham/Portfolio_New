@@ -1,0 +1,170 @@
+---
+const metrics = [
+  { value: '+30%', label: 'organic acquisition', context: '~12k → 15.6k monthly sign-ups in 4 months via segmentation + A/B testing', where: 'Pharmaceutical UK Ltd', dir: 'up' },
+  { value: '−22%', label: 'CAC reduction', context: 'Customer acquisition cost reduced within the same acquisition programme', where: 'Pharmaceutical UK Ltd', dir: 'up' },
+  { value: '±8%', label: 'forecast accuracy', context: 'SQL predictive models informing ~£200K revenue targeting', where: 'Pharmaceutical UK Ltd', dir: 'up' },
+  { value: '+12%', label: 'retention', context: 'Cohort + RFM segmentation on 50k+ MAU driving repeat engagement', where: 'Pharmaceutical UK Ltd', dir: 'up' },
+  { value: '−50%', label: 'manual reporting time', context: 'Automated SQL/Python pipelines replacing manual data extraction', where: 'Pharmaceutical UK Ltd', dir: 'up' },
+  { value: '20+', label: 'experiments shipped', context: 'End-to-end A/B analysis feeding directly into product roadmap', where: 'Smallcap Networks', dir: 'neutral' },
+  { value: '1M+', label: 'records modelled', context: 'Behavioural insight pipeline driving churn reduction initiatives', where: 'Smallcap Networks', dir: 'neutral' },
+  { value: '+9%', label: 'repeat bookings', context: 'Cohort analysis on 12 months of booking data revealing retention levers', where: 'Hampton by Hilton', dir: 'up' },
+];
+---
+
+<section id="impact">
+  <div class="container">
+    <div class="impact-header reveal">
+      <span class="section-label">02 Impact</span>
+      <div class="impact-title-row">
+        <h2 class="impact-title">The numbers that<br />changed the meeting.</h2>
+        <p class="impact-sub">Real outcomes, verifiable employers. This is the work.</p>
+      </div>
+    </div>
+
+    <div class="impact-grid">
+      {metrics.map((m, i) => (
+        <div class="metric-card card reveal" style={`animation-delay: ${i * 60}ms`} data-dir={m.dir}>
+          <div class="mc-top">
+            <span class={`mc-value mono ${m.dir === 'up' ? 'metric-up' : ''}`}>
+              {m.value}
+            </span>
+            <span class="mc-label">{m.label}</span>
+          </div>
+          <p class="mc-context">{m.context}</p>
+          <div class="mc-where">
+            <span class="dot-sm"></span>
+            <span class="mono" style="font-size: 0.72rem; color: var(--text-lo);">{m.where}</span>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <p class="impact-note reveal" style="animation-delay: 480ms;">
+      <span class="mono" style="color: var(--signal); font-size: 0.8rem;">£1.3M</span>
+      <span style="color: var(--text-lo); font-size: 0.85rem; margin-left: 8px;">total revenue contribution across engagements</span>
+    </p>
+  </div>
+</section>
+
+<style>
+  .impact-header {
+    margin-bottom: 48px;
+  }
+
+  .impact-title-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .impact-title {
+    font-size: var(--step-3);
+  }
+
+  .impact-sub {
+    color: var(--text-lo);
+    font-size: var(--step--1);
+    max-width: 220px;
+    text-align: right;
+  }
+
+  .impact-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .metric-card {
+    background: var(--ink-800);
+    border: none;
+    border-radius: 0;
+    padding: 28px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: background 200ms;
+  }
+
+  .metric-card:hover {
+    background: var(--ink-700);
+  }
+
+  .mc-top {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .mc-value {
+    font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .mc-label {
+    font-size: var(--step--1);
+    color: var(--text-lo);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .mc-context {
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    line-height: 1.5;
+    flex: 1;
+  }
+
+  .mc-where {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+  }
+
+  .dot-sm {
+    width: 5px;
+    height: 5px;
+    background: var(--line);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .impact-note {
+    text-align: center;
+    padding: 16px;
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    background: var(--ink-800);
+  }
+
+  @media (max-width: 1024px) {
+    .impact-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .impact-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .impact-title-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .impact-sub {
+      text-align: left;
+    }
+  }
+</style>
