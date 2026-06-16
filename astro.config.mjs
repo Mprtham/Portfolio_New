@@ -2,9 +2,11 @@
 import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  integrations: [react()],
+  site: 'https://portfolio-iota-taupe-34.vercel.app',
+  integrations: [react(), sitemap()],
   vite: {
     plugins: [tailwindcss()]
   }

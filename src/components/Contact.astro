@@ -1,4 +1,6 @@
 ---
+import SiteStats from './react/SiteStats';
+
 const socials = [
   { label: 'LinkedIn', href: 'https://linkedin.com/in/prathameshmishra07', icon: 'LI' },
   { label: 'GitHub', href: 'https://github.com/Mprtham', icon: 'GH' },
@@ -64,9 +66,7 @@ const socials = [
     <span class="mono footer-copy" style="font-size: 0.72rem; color: var(--text-lo);">
       © 2025 Prathamesh Mishra · London, UK
     </span>
-    <span class="footer-note mono" style="font-size: 0.72rem; color: var(--text-lo);">
-      Built with Astro · Cookieless analytics · GDPR-clean
-    </span>
+    <SiteStats client:idle />
   </div>
 </footer>
 

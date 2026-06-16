@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
+import { ClientRouter } from 'astro:transitions';
 
 interface Props {
   title?: string;
@@ -35,6 +36,8 @@ const ogImage = '/og.png';
 
     <title>{title}</title>
 
+    <ClientRouter />
+
     <!-- JSON-LD Person schema -->
     <script type="application/ld+json" is:inline>
       {
@@ -42,7 +45,7 @@ const ogImage = '/og.png';
         "@type": "Person",
         "name": "Prathamesh Mishra",
         "jobTitle": "Data & Product Analyst",
-        "url": "https://prathameshmishra.com",
+        "url": "https://portfolio-iota-taupe-34.vercel.app",
         "email": "mprathamesh2023@gmail.com",
         "address": { "@type": "PostalAddress", "addressLocality": "London", "addressCountry": "UK" },
         "sameAs": [
@@ -59,19 +62,22 @@ const ogImage = '/og.png';
     <Nav />
     <slot />
     <script>
-      // Scroll reveal
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((e) => {
-            if (e.isIntersecting) {
-              e.target.classList.add('visible');
-              observer.unobserve(e.target);
-            }
-          });
-        },
-        { threshold: 0.1 }
-      );
-      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+      function initReveal() {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                observer.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.08 }
+        );
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+      }
+      initReveal();
+      document.addEventListener('astro:page-load', initReveal);
     </script>
   </body>
 </html>

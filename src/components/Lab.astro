@@ -1,0 +1,125 @@
+---
+import SentinelFeed from './react/SentinelFeed';
+import RagDiagram from './react/RagDiagram';
+import AgentDemo from './react/AgentDemo';
+---
+
+<section id="lab">
+  <div class="container">
+    <div class="lab-header reveal">
+      <span class="section-label">06 Lab</span>
+      <div class="lab-title-row">
+        <h2 class="lab-title">Not demos.<br />Running systems.</h2>
+        <p class="lab-sub">Three of my AI projects, live in the browser. No backend — the logic runs here.</p>
+      </div>
+    </div>
+
+    <!-- Sentinel Feed -->
+    <div class="lab-item reveal">
+      <div class="lab-item-header">
+        <div>
+          <h3 class="lab-item-title">Sentinel — Anomaly Detection Feed</h3>
+          <p class="lab-item-desc">100+ simulated events/sec · statistical anomaly detection · AI root-cause reports generated in real time</p>
+        </div>
+        <a href="/work/sentinel" class="lab-link mono">Case study →</a>
+      </div>
+      <SentinelFeed client:visible />
+    </div>
+
+    <!-- RAG Pipeline -->
+    <div class="lab-item reveal" style="animation-delay: 80ms;">
+      <div class="lab-item-header">
+        <div>
+          <h3 class="lab-item-title">RAG Observatory — Pipeline Architecture</h3>
+          <p class="lab-item-desc">Interactive diagram of the full production RAG pipeline with RBAC. Click any node.</p>
+        </div>
+        <a href="https://github.com/Mprtham/rag-observatory" target="_blank" rel="noopener" class="lab-link mono">View code ↗</a>
+      </div>
+      <RagDiagram client:visible />
+    </div>
+
+    <!-- Agentic Analyst -->
+    <div class="lab-item reveal" style="animation-delay: 160ms;">
+      <div class="lab-item-header">
+        <div>
+          <h3 class="lab-item-title">Agentic Data Analyst — Analysis Demo</h3>
+          <p class="lab-item-desc">Watch the ReAct agent run end-to-end: data profiling → statistical tests → revenue modelling.</p>
+        </div>
+        <a href="/work/agentic-data-analyst" class="lab-link mono">Case study →</a>
+      </div>
+      <AgentDemo client:visible />
+    </div>
+  </div>
+</section>
+
+<style>
+  .lab-header {
+    margin-bottom: 48px;
+  }
+
+  .lab-title-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .lab-title {
+    font-size: var(--step-3);
+  }
+
+  .lab-sub {
+    color: var(--text-lo);
+    font-size: var(--step--1);
+    max-width: 260px;
+    text-align: right;
+    line-height: 1.55;
+  }
+
+  .lab-item {
+    margin-bottom: 48px;
+  }
+
+  .lab-item-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+  }
+
+  .lab-item-title {
+    font-size: var(--step-1);
+    margin-bottom: 6px;
+  }
+
+  .lab-item-desc {
+    font-size: var(--step--1);
+    color: var(--text-lo);
+    max-width: 520px;
+    line-height: 1.5;
+  }
+
+  .lab-link {
+    font-size: 0.78rem;
+    color: var(--signal);
+    white-space: nowrap;
+    padding: 6px 12px;
+    border: 1px solid rgba(92, 242, 192, 0.3);
+    border-radius: 2px;
+    transition: background 200ms, color 200ms;
+    flex-shrink: 0;
+  }
+
+  .lab-link:hover {
+    background: rgba(92, 242, 192, 0.08);
+  }
+
+  @media (max-width: 600px) {
+    .lab-sub { text-align: left; max-width: 100%; }
+    .lab-title-row { flex-direction: column; }
+  }
+</style>
