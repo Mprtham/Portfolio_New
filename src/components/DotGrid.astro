@@ -15,9 +15,13 @@
 
 <script>
   let dotRaf: number | null = null;
+  let currentMouseHandler: ((e: MouseEvent) => void) | null = null;
+  let currentResizeHandler: (() => void) | null = null;
 
   function initDotGrid() {
     if (dotRaf) cancelAnimationFrame(dotRaf);
+    if (currentMouseHandler) window.removeEventListener('mousemove', currentMouseHandler);
+    if (currentResizeHandler) window.removeEventListener('resize', currentResizeHandler);
 
     const canvas = document.getElementById('dot-grid-canvas') as HTMLCanvasElement;
     if (!canvas) return;
@@ -25,8 +29,8 @@
     const ctx = canvas.getContext('2d')!;
     const isTouch = window.matchMedia('(hover: none)').matches;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const DOT_COUNT = 80;
-    const MAX_DIST = 130;
+    const DOT_COUNT = 100;
+    const MAX_DIST = 150;
 
     let w = 0, h = 0;
     let mouseX = -1000, mouseY = -1000;
@@ -58,22 +62,24 @@
       }
     }
 
-    function onMouseMove(e: MouseEvent) {
+    currentMouseHandler = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       targetX = e.clientX - rect.left;
       targetY = e.clientY - rect.top;
-    }
+    };
 
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('resize', resize);
+    currentResizeHandler = resize;
+
+    window.addEventListener('mousemove', currentMouseHandler);
+    window.addEventListener('resize', currentResizeHandler);
     resize();
 
     if (isTouch || reduced) {
       ctx.clearRect(0, 0, w, h);
       dots.forEach(dot => {
         ctx.beginPath();
-        ctx.arc(dot.baseX, dot.baseY, 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(92, 242, 192, 0.12)';
+        ctx.arc(dot.baseX, dot.baseY, 2, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(92, 242, 192, 0.2)';
         ctx.fill();
       });
       return;
@@ -95,13 +101,13 @@
         const dy = mouseY - y;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        let radius = 1.5;
-        let opacity = 0.15;
+        let radius = 2;
+        let opacity = 0.25;
 
         if (dist < MAX_DIST && mouseX > -100) {
           const proximity = 1 - dist / MAX_DIST;
-          radius = 1.5 + 2.5 * proximity;
-          opacity = 0.15 + 0.35 * proximity;
+          radius = 2 + 3 * proximity;
+          opacity = 0.25 + 0.3 * proximity;
         }
 
         ctx.beginPath();
@@ -120,5 +126,7 @@
   document.addEventListener('astro:page-load', initDotGrid);
   document.addEventListener('astro:before-swap', () => {
     if (dotRaf) cancelAnimationFrame(dotRaf);
+    if (currentMouseHandler) window.removeEventListener('mousemove', currentMouseHandler);
+    if (currentResizeHandler) window.removeEventListener('resize', currentResizeHandler);
   });
 </script>
