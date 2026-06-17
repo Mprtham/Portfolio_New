@@ -98,8 +98,10 @@ const ogImage = '/og.png';
         reveals.forEach(el => revealObserver!.observe(el));
       }
 
-      initReveals();
       document.addEventListener('astro:page-load', initReveals);
+      document.addEventListener('astro:before-swap', () => {
+        if (revealObserver) { revealObserver.disconnect(); revealObserver = null; }
+      });
     </script>
 
     <script>

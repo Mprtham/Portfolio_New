@@ -177,14 +177,17 @@ const links = [
 </style>
 
 <script>
-  const toggle = document.getElementById('nav-toggle');
-  const links = document.querySelector('.nav-links');
+  function initNav() {
+    const toggle = document.getElementById('nav-toggle');
+    const links = document.querySelector<HTMLElement>('.nav-links');
+    if (!toggle || !links) return;
 
-  toggle?.addEventListener('click', () => {
-    links?.classList.toggle('open');
-  });
+    toggle.addEventListener('click', () => links.classList.toggle('open'));
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => links.classList.remove('open'));
+    });
+  }
 
-  document.querySelectorAll('.nav-link').forEach((link) => {
-    link.addEventListener('click', () => links?.classList.remove('open'));
-  });
+  initNav();
+  document.addEventListener('astro:page-load', initNav);
 </script>
