@@ -78,28 +78,25 @@
     const wrapper = document.getElementById('loader-wrapper') as HTMLElement | null;
     if (!wrapper) return;
     if (sessionStorage.getItem('loaderDone')) {
+      document.body.classList.add('loader-done');
       wrapper.style.display = 'none';
-      document.dispatchEvent(new CustomEvent('intro:complete'));
       return;
     }
-    // Prevent double-run from immediate call + astro:page-load
+    // Prevent double-run (immediate call + astro:page-load both invoke this)
     if (wrapper.style.display !== 'none') return;
     wrapper.style.display = '';
     const countEl = document.getElementById('loader-count');
     const progressEl = document.getElementById('loader-progress') as HTMLElement;
     if (!countEl || !progressEl) return;
 
-    // Keep the % span, update only the leading text node
     function setCount(n: number) {
       countEl!.childNodes[0].textContent = String(n);
     }
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    if (reduced) {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
       wrapper.remove();
+      document.body.classList.add('loader-done');
       sessionStorage.setItem('loaderDone', '1');
-      document.dispatchEvent(new CustomEvent('intro:complete'));
       return;
     }
 
@@ -123,8 +120,8 @@
           wrapper!.classList.add('loader--exit');
           wrapper!.addEventListener('transitionend', () => {
             wrapper!.remove();
+            document.body.classList.add('loader-done');
             sessionStorage.setItem('loaderDone', '1');
-            document.dispatchEvent(new CustomEvent('intro:complete'));
           }, { once: true });
         }, 180);
       }
