@@ -80,10 +80,8 @@ const ogImage = '/og.png';
         if (revealRaf) { cancelAnimationFrame(revealRaf); revealRaf = null; }
 
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const EASE = 'cubic-bezier(0.22,1,0.36,1)';
         const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal:not(.visible)'));
         if (!els.length) return;
-
         if (reduced) { els.forEach(el => el.classList.add('visible')); return; }
 
         const vh = window.innerHeight;
@@ -91,8 +89,10 @@ const ogImage = '/og.png';
 
         els.forEach(el => {
           if (el.getBoundingClientRect().top < vh * 0.9) {
-            el.classList.add('visible'); // already on screen
+            el.classList.add('visible');
           } else {
+            // Hide instantly: override the CSS transition so the hide is a snap, not an animation
+            el.style.transition = 'none';
             el.style.opacity = '0';
             el.style.transform = 'translateY(28px)';
             pending.push(el);
@@ -101,40 +101,29 @@ const ogImage = '/og.png';
 
         if (!pending.length) return;
 
-        function tick() {
-          if (!pending.length) { revealRaf = null; return; }
-          const cvh = window.innerHeight;
-          const toReveal: Array<{ el: HTMLElement; delay: number }> = [];
+        // Next frame: restore CSS transition (elements are now hidden; CSS transition takes over again).
+        // Tick starts in the frame after that so elements are definitely painted-hidden before we watch them.
+        requestAnimationFrame(() => {
+          pending.forEach(el => { el.style.transition = ''; });
 
-          for (let i = pending.length - 1; i >= 0; i--) {
-            const el = pending[i];
-            if (el.getBoundingClientRect().top < cvh * 0.88) {
-              const delay = parseInt(getComputedStyle(el).getPropertyValue('--delay').trim()) || 0;
-              pending.splice(i, 1);
-              toReveal.push({ el, delay });
+          function tick() {
+            if (!pending.length) { revealRaf = null; return; }
+            const cvh = window.innerHeight;
+            for (let i = pending.length - 1; i >= 0; i--) {
+              const el = pending[i];
+              if (el.getBoundingClientRect().top < cvh * 0.88) {
+                // CSS transition is defined (from .reveal in global.css) — just change the values
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0)';
+                el.classList.add('visible');
+                pending.splice(i, 1);
+              }
             }
-          }
-
-          if (toReveal.length) {
-            // Phase 1: set transition on all elements
-            toReveal.forEach(({ el, delay }) => {
-              el.style.transition = `opacity 0.65s ${EASE} ${delay}ms, transform 0.65s ${EASE} ${delay}ms`;
-            });
-            // Force a style recalc so the browser registers the transition
-            // before we change opacity — without this, browser skips the animation
-            void document.body.offsetWidth;
-            // Phase 2: now change the values (browser will animate from 0→1)
-            toReveal.forEach(({ el }) => {
-              el.style.opacity = '1';
-              el.style.transform = 'translateY(0)';
-              el.classList.add('visible');
-            });
+            revealRaf = requestAnimationFrame(tick);
           }
 
           revealRaf = requestAnimationFrame(tick);
-        }
-
-        revealRaf = requestAnimationFrame(tick);
+        });
       }
 
       initReveal();

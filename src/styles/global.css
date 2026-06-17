@@ -196,9 +196,15 @@ section {
   white-space: nowrap;
 }
 
-/* Scroll reveal — JS-driven transitions only, no CSS animation */
+/* Scroll reveal — transition always defined in CSS, JS only changes opacity/transform values */
+.reveal {
+  transition:
+    opacity  0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms),
+    transform 0.65s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms);
+}
+
 .reveal.visible {
-  /* marker class; actual transition driven by inline styles in initReveal() */
+  /* marker class only */
 }
 
 @media (prefers-reduced-motion: reduce) {
