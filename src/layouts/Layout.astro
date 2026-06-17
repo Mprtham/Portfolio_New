@@ -72,58 +72,61 @@ const ogImage = '/og.png';
     <Cursor />
     <CursorTrail />
     <script>
-      function initReveal() {
-        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const vh = window.innerHeight;
-        const EASE = 'cubic-bezier(0.22,1,0.36,1)';
+      // IntersectionObserver does NOT work with Lenis (Lenis intercepts native scroll).
+      // Use getBoundingClientRect() in a RAF loop instead — always reflects true visual position.
+      let revealRaf: number | null = null;
 
-        // Skip elements already revealed
+      function initReveal() {
+        if (revealRaf) { cancelAnimationFrame(revealRaf); revealRaf = null; }
+
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const EASE = 'cubic-bezier(0.22,1,0.36,1)';
         const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal:not(.visible)'));
         if (!els.length) return;
 
-        if (reduced) {
-          els.forEach(el => el.classList.add('visible'));
-          return;
-        }
+        if (reduced) { els.forEach(el => el.classList.add('visible')); return; }
 
-        // Separate in-viewport vs below-fold
-        const belowFold: HTMLElement[] = [];
+        const vh = window.innerHeight;
+        const pending: HTMLElement[] = [];
+
         els.forEach(el => {
           if (el.getBoundingClientRect().top < vh * 0.9) {
-            el.classList.add('visible'); // already on screen — no animation needed
+            el.classList.add('visible'); // already on screen
           } else {
-            // Hide before observer fires
             el.style.opacity = '0';
             el.style.transform = 'translateY(28px)';
-            belowFold.push(el);
+            pending.push(el);
           }
         });
 
-        if (!belowFold.length) return;
+        if (!pending.length) return;
 
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(e => {
-            if (!e.isIntersecting) return;
-            const el = e.target as HTMLElement;
-            const delay = parseInt(getComputedStyle(el).getPropertyValue('--delay').trim()) || 0;
-
-            // rAF ensures browser has committed the opacity:0 state before we transition
-            requestAnimationFrame(() => {
+        function tick() {
+          if (!pending.length) { revealRaf = null; return; }
+          const cvh = window.innerHeight;
+          // Iterate backwards so splice doesn't break indices
+          for (let i = pending.length - 1; i >= 0; i--) {
+            const el = pending[i];
+            if (el.getBoundingClientRect().top < cvh * 0.88) {
+              const delay = parseInt(getComputedStyle(el).getPropertyValue('--delay').trim()) || 0;
               el.style.transition = `opacity 0.65s ${EASE} ${delay}ms, transform 0.65s ${EASE} ${delay}ms`;
               el.style.opacity = '1';
               el.style.transform = 'translateY(0)';
               el.classList.add('visible');
-            });
+              pending.splice(i, 1);
+            }
+          }
+          revealRaf = requestAnimationFrame(tick);
+        }
 
-            observer.unobserve(el);
-          });
-        }, { threshold: 0.07 });
-
-        belowFold.forEach(el => observer.observe(el));
+        revealRaf = requestAnimationFrame(tick);
       }
 
       initReveal();
       document.addEventListener('astro:page-load', initReveal);
+      document.addEventListener('astro:before-swap', () => {
+        if (revealRaf) { cancelAnimationFrame(revealRaf); revealRaf = null; }
+      });
     </script>
 
     <script>
