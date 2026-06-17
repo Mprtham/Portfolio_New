@@ -57,8 +57,6 @@
   --step-3: clamp(2.2rem, 1.2rem + 4vw, 4rem);
   --step-4: clamp(3rem, 1.2rem + 9vw, 7rem);
 
-  /* Motion */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Light theme overrides */
@@ -85,6 +83,7 @@ html.light {
 }
 
 html {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
