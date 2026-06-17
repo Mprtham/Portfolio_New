@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Skill {
   name: string;
@@ -81,11 +81,23 @@ const allProjects = Object.keys(projectLabels);
 
 export default function SkillsFilter() {
   const [active, setActive] = useState<string | null>(null);
-  const [mounted, setMounted] = useState(false);
+  const [visible, setVisible] = useState(false);
+  const rootRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const t = setTimeout(() => setMounted(true), 100);
-    return () => clearTimeout(t);
+    const el = rootRef.current;
+    if (!el) { setVisible(true); return; }
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setVisible(true);
+          io.disconnect();
+        }
+      },
+      { threshold: 0.05 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
 
   const isHighlighted = (skill: Skill) => {
@@ -94,7 +106,7 @@ export default function SkillsFilter() {
   };
 
   return (
-    <div className="sf-root">
+    <div className="sf-root" ref={rootRef}>
       {/* Filter chips */}
       <div className="sf-filters" role="group" aria-label="Filter skills by project">
         <button
@@ -139,7 +151,7 @@ export default function SkillsFilter() {
                       <div className="sf-bar-track" role="progressbar" aria-valuenow={skill.level} aria-valuemin={0} aria-valuemax={100} aria-label={`${skill.name}: ${skill.label}`}>
                         <div
                           className="sf-bar-fill"
-                          style={{ width: (highlighted && mounted) ? `${skill.level}%` : '0%' }}
+                          style={{ width: (highlighted && visible) ? `${skill.level}%` : '0%' }}
                         />
                       </div>
                     </div>

@@ -87,12 +87,17 @@ const metrics = [
   }
 
   .hero-animate {
+    opacity: 0;
+  }
+
+  .hero-animate.hero-go {
     animation: heroFadeUp 500ms var(--ease-out) both;
     animation-delay: var(--delay, 0ms);
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero-animate { animation: none; }
+    .hero-animate { opacity: 1; }
+    .hero-animate.hero-go { animation: none; }
   }
 
   .hero-inner {
@@ -250,22 +255,34 @@ const metrics = [
 <script>
   import gsap from 'gsap';
 
-  function initHeroChars() {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const chars = document.querySelectorAll<HTMLElement>('.hero-char');
-    if (!chars.length) return;
-    gsap.from(chars, {
-      opacity: 0,
-      y: 36,
-      stagger: 0.04,
-      duration: 0.65,
-      ease: 'power3.out',
-      delay: 0.15,
+  function startHeroAnimation() {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // GSAP character-by-character animation
+    if (!reduced) {
+      const chars = document.querySelectorAll<HTMLElement>('.hero-char');
+      if (chars.length) {
+        gsap.from(chars, { opacity: 0, y: 36, stagger: 0.04, duration: 0.65, ease: 'power3.out' });
+      }
+    }
+
+    // Trigger CSS fade-up animations on hero text elements
+    document.querySelectorAll<HTMLElement>('.hero-animate').forEach(el => {
+      el.classList.add('hero-go');
     });
   }
 
-  initHeroChars();
-  document.addEventListener('astro:page-load', initHeroChars);
+  function scheduleHero() {
+    const loader = document.getElementById('loader-wrapper');
+    // If loader is visible, wait for it to finish before animating hero
+    if (loader && loader.style.display !== 'none') {
+      document.addEventListener('intro:complete', startHeroAnimation, { once: true });
+    } else {
+      startHeroAnimation();
+    }
+  }
+
+  document.addEventListener('astro:page-load', scheduleHero);
 </script>
 
 <script>

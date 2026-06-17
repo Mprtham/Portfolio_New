@@ -79,8 +79,11 @@
     if (!wrapper) return;
     if (sessionStorage.getItem('loaderDone')) {
       wrapper.style.display = 'none';
+      document.dispatchEvent(new CustomEvent('intro:complete'));
       return;
     }
+    // Prevent double-run from immediate call + astro:page-load
+    if (wrapper.style.display !== 'none') return;
     wrapper.style.display = '';
     const countEl = document.getElementById('loader-count');
     const progressEl = document.getElementById('loader-progress') as HTMLElement;
