@@ -1,5 +1,6 @@
 ---
 import HeroThree from './HeroThree.astro';
+import DotGrid from './DotGrid.astro';
 const heroLine1 = 'PRATHAMESH';
 const heroLine2 = 'MISHRA';
 const metrics = [
@@ -13,7 +14,9 @@ const metrics = [
 ---
 
 <section id="home" class="hero">
-  <!-- Three.js 3D particle network background -->
+  <!-- Fallback dot grid (always rendered; hidden by JS when Three.js loads) -->
+  <DotGrid />
+  <!-- Three.js 3D particle network (replaces dot grid on WebGL-capable devices) -->
   <HeroThree />
   <!-- Ambient sparkline -->
   <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>

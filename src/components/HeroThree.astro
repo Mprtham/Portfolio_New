@@ -26,6 +26,16 @@
     if (threeResizeH) { window.removeEventListener('resize', threeResizeH); threeResizeH = null; }
     if (threeMouseH) { window.removeEventListener('mousemove', threeMouseH); threeMouseH = null; }
     if (renderer) { renderer.dispose(); renderer = null; }
+    // Restore fallback grid visibility so it can be re-evaluated on next init
+    const dotGrid = document.getElementById('dot-grid-canvas');
+    if (dotGrid) dotGrid.style.display = '';
+  }
+
+  function hasBrowserWebGL(): boolean {
+    try {
+      const probe = document.createElement('canvas');
+      return !!(probe.getContext('webgl') || probe.getContext('experimental-webgl'));
+    } catch { return false; }
   }
 
   function initHeroThree() {
@@ -36,11 +46,26 @@
     const parent = canvas.parentElement;
     if (!parent) return;
 
+    const dotGrid = document.getElementById('dot-grid-canvas') as HTMLCanvasElement | null;
+
+    if (!hasBrowserWebGL()) {
+      canvas.style.display = 'none';
+      return;
+    }
+
     let W = parent.clientWidth;
     let H = parent.clientHeight;
     if (W === 0 || H === 0) return;
 
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    try {
+      renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+    } catch {
+      canvas.style.display = 'none';
+      return;
+    }
+
+    // WebGL working: hide the dot-grid fallback
+    if (dotGrid) dotGrid.style.display = 'none';
     renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
     renderer.setSize(W, H);
     renderer.setClearColor(0x000000, 0);
