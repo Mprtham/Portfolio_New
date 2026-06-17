@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface Skill {
   name: string;
@@ -81,6 +81,12 @@ const allProjects = Object.keys(projectLabels);
 
 export default function SkillsFilter() {
   const [active, setActive] = useState<string | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const t = setTimeout(() => setMounted(true), 100);
+    return () => clearTimeout(t);
+  }, []);
 
   const isHighlighted = (skill: Skill) => {
     if (!active) return true;
@@ -133,7 +139,7 @@ export default function SkillsFilter() {
                       <div className="sf-bar-track" role="progressbar" aria-valuenow={skill.level} aria-valuemin={0} aria-valuemax={100} aria-label={`${skill.name}: ${skill.label}`}>
                         <div
                           className="sf-bar-fill"
-                          style={{ width: highlighted ? `${skill.level}%` : '0%' }}
+                          style={{ width: (highlighted && mounted) ? `${skill.level}%` : '0%' }}
                         />
                       </div>
                     </div>

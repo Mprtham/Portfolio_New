@@ -3,6 +3,7 @@ import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Cursor from '../components/Cursor.astro';
 import CursorTrail from '../components/CursorTrail.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
 import { ClientRouter } from 'astro:transitions';
 
 interface Props {
@@ -59,9 +60,14 @@ const ogImage = '/og.png';
     </script>
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <!-- Prevent flash of wrong theme -->
+    <script is:inline>
+      if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
+    </script>
   </head>
   <body>
     <Nav />
+    <ThemeToggle />
     <slot />
     <Cursor />
     <CursorTrail />

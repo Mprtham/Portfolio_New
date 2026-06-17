@@ -1,5 +1,7 @@
 ---
 import DotGrid from './DotGrid.astro';
+const heroLine1 = 'PRATHAMESH';
+const heroLine2 = 'MISHRA';
 const metrics = [
   { value: '+30%', label: 'organic acquisition' },
   { value: '−22%', label: 'CAC reduction' },
@@ -22,7 +24,11 @@ const metrics = [
       London, UK &nbsp;·&nbsp; Open to Data / Product Analyst &amp; AI roles
     </div>
 
-    <h1 class="hero-name hero-animate" style="--delay: 80ms">PRATHAMESH<br />MISHRA</h1>
+    <h1 class="hero-name" aria-label="Prathamesh Mishra">
+      {heroLine1.split('').map(c => <span class="hero-char">{c}</span>)}
+      <br />
+      {heroLine2.split('').map(c => <span class="hero-char">{c}</span>)}
+    </h1>
 
     <p class="hero-thesis hero-animate" style="--delay: 160ms">
       I turn behaviour into decisions.
@@ -237,7 +243,31 @@ const metrics = [
     font-size: var(--step--1);
     color: var(--text-lo);
   }
+  .hero-char {
+    display: inline-block;
+  }
 </style>
+
+<script>
+  import gsap from 'gsap';
+
+  function initHeroChars() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const chars = document.querySelectorAll<HTMLElement>('.hero-char');
+    if (!chars.length) return;
+    gsap.from(chars, {
+      opacity: 0,
+      y: 36,
+      stagger: 0.04,
+      duration: 0.65,
+      ease: 'power3.out',
+      delay: 0.15,
+    });
+  }
+
+  initHeroChars();
+  document.addEventListener('astro:page-load', initHeroChars);
+</script>
 
 <script>
   // Ambient sparkline on canvas

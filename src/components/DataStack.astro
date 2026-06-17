@@ -1,0 +1,179 @@
+---
+const layers = [
+  {
+    num: '01',
+    name: 'Sources',
+    desc: 'Where data originates — raw signals before any transformation.',
+    tools: ['GA4 events', 'CRM exports', 'NHS APIs', 'Event streams', 'CSV / flat files', 'Webhooks'],
+  },
+  {
+    num: '02',
+    name: 'Ingestion',
+    desc: 'Moving data reliably from source into the warehouse.',
+    tools: ['Kafka', 'Airflow', 'BigQuery Transfers', 'ETL scripts', 'Fivetran-style pipelines'],
+  },
+  {
+    num: '03',
+    name: 'Transform',
+    desc: 'Cleaning, modelling, and testing data into a trusted layer.',
+    tools: ['dbt', 'SQL views', 'Python (Polars)', 'pandas', 'Data contracts', 'dbt tests'],
+  },
+  {
+    num: '04',
+    name: 'Analytics',
+    desc: 'Self-serve dashboards and statistical insights for decisions.',
+    tools: ['Power BI + DAX', 'BigQuery', 'Tableau', 'GA4', 'A/B testing', 'Cohort analysis'],
+  },
+  {
+    num: '05',
+    name: 'AI / ML',
+    desc: 'Agents, models, and pipelines deployed on top of clean data.',
+    tools: ['LangGraph', 'FastAPI', 'ChromaDB', 'scikit-learn', 'Fine-tuning (LoRA)', 'RAGAS'],
+  },
+];
+---
+
+<section id="stack">
+  <div class="container">
+    <div class="ds-header reveal">
+      <span class="section-label">06 Architecture</span>
+      <div class="ds-title-row">
+        <h2 class="ds-title">I work the full<br />data pipeline.</h2>
+        <p class="ds-sub">Not just the BI layer. From raw source to deployed AI — each layer shapes the one above it.</p>
+      </div>
+    </div>
+
+    <div class="ds-layers">
+      {layers.map((layer, i) => (
+        <div class="ds-layer reveal" style={`--delay: ${i * 60}ms`}>
+          <div class="ds-layer-accent" aria-hidden="true"></div>
+          <div class="ds-layer-content">
+            <div class="ds-layer-left">
+              <span class="ds-num mono">{layer.num}</span>
+              <div>
+                <h3 class="ds-layer-name">{layer.name}</h3>
+                <p class="ds-layer-desc">{layer.desc}</p>
+              </div>
+            </div>
+            <div class="ds-tools">
+              {layer.tools.map(t => <span class="chip">{t}</span>)}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .ds-header {
+    margin-bottom: 40px;
+  }
+
+  .ds-title-row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 32px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .ds-title {
+    font-size: var(--step-3);
+  }
+
+  .ds-sub {
+    color: var(--text-lo);
+    font-size: var(--step--1);
+    max-width: 300px;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .ds-layers {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .ds-layer {
+    position: relative;
+    background: var(--ink-800);
+    border: 1px solid var(--line);
+    border-radius: 2px;
+    padding: 24px 28px;
+    overflow: hidden;
+    transition: border-color 250ms;
+  }
+
+  .ds-layer:hover {
+    border-color: rgba(232, 164, 74, 0.35);
+  }
+
+  /* Accent bar on the left — expands height on hover */
+  .ds-layer-accent {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 0;
+    background: var(--signal);
+    transition: height 350ms var(--ease-out);
+  }
+
+  .ds-layer:hover .ds-layer-accent {
+    height: 100%;
+  }
+
+  .ds-layer-content {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+  }
+
+  .ds-layer-left {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    min-width: 280px;
+    flex-shrink: 0;
+  }
+
+  .ds-num {
+    font-size: 0.7rem;
+    color: var(--signal);
+    opacity: 0.7;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+
+  .ds-layer-name {
+    font-size: var(--step-1);
+    color: var(--text-hi);
+    margin-bottom: 4px;
+  }
+
+  .ds-layer-desc {
+    font-size: var(--step--1);
+    color: var(--text-lo);
+    line-height: 1.5;
+  }
+
+  .ds-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    flex: 1;
+  }
+
+  @media (max-width: 700px) {
+    .ds-sub { text-align: left; max-width: 100%; }
+    .ds-title-row { flex-direction: column; }
+    .ds-layer-left { min-width: 0; }
+    .ds-layer-content { flex-direction: column; align-items: flex-start; gap: 16px; }
+  }
+</style>

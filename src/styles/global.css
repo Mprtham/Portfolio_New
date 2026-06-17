@@ -61,6 +61,19 @@
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+/* Light theme overrides */
+html.light {
+  --ink-900: #F7F4EE;
+  --ink-800: #EDE9DF;
+  --ink-700: #E2DDCF;
+  --line: #CFC9B8;
+  --text-hi: #1A1610;
+  --text-mid: #4A4438;
+  --text-lo: #8A8070;
+  --signal: #A06820;
+  --signal-ink: #FFFFFF;
+}
+
 *, *::before, *::after {
   box-sizing: border-box;
   margin: 0;

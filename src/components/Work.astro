@@ -148,6 +148,7 @@ const themeLabels: Record<string, string> = {
     <!-- Flagship -->
     {projects.filter(p => p.featured).map(p => (
       <div class="flagship-card card reveal" id={p.id}>
+        <div class="card-preview" data-theme="flagship" aria-hidden="true"></div>
         <div class="flagship-inner">
           <div class="flagship-left">
             <div class="flagship-badge mono">★ Flagship — Commercial / Client Work</div>
@@ -189,6 +190,7 @@ const themeLabels: Record<string, string> = {
         <div class="work-grid">
           {projects.filter(p => p.theme === theme).map((p, i) => (
             <div class="project-card card reveal" style={`--delay: ${i * 80}ms`} id={p.id}>
+              <div class="card-preview" data-theme={p.theme} aria-hidden="true"></div>
               <div class="pc-top">
                 <h3 class="pc-title">{p.title}</h3>
                 <p class="pc-desc">{p.description}</p>
@@ -229,6 +231,26 @@ const themeLabels: Record<string, string> = {
     font-size: var(--step-3);
     margin-top: 12px;
   }
+
+  /* Card hover preview */
+  .card-preview {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    transform: scaleY(0);
+    transform-origin: bottom;
+    transition: transform 400ms var(--ease-out);
+    pointer-events: none;
+  }
+  .card:hover .card-preview { transform: scaleY(1); }
+  .card-preview[data-theme="flagship"] { background: rgba(232, 164, 74, 0.06); }
+  .card-preview[data-theme="ai"]        { background: rgba(167, 139, 250, 0.06); }
+  .card-preview[data-theme="data"]      { background: rgba(56, 189, 248, 0.06); }
+  .card-preview[data-theme="trustworthy"] { background: rgba(251, 113, 133, 0.06); }
+
+  /* Ensure card content sits above preview */
+  .flagship-inner { position: relative; z-index: 1; }
+  .project-card > *:not(.card-preview) { position: relative; z-index: 1; }
 
   /* Flagship */
   .flagship-card {
@@ -321,6 +343,8 @@ const themeLabels: Record<string, string> = {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    position: relative;
+    overflow: hidden;
   }
 
   .pc-top {
