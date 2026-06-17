@@ -88,6 +88,8 @@
     tc.fillStyle = grad;
     tc.fillRect(0, 0, texSize, texSize);
     const glowTex = new THREE.CanvasTexture(texCanvas);
+    glowTex.flipY = false;
+    glowTex.premultiplyAlpha = false;
 
     // Particles
     const COUNT = 85;

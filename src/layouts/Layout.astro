@@ -60,9 +60,10 @@ const ogImage = '/og.png';
     </script>
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- Prevent flash of wrong theme -->
+    <!-- Prevent flash of wrong theme + enable JS-driven reveal animations -->
     <script is:inline>
       if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
+      document.documentElement.classList.add('js-ready');
     </script>
   </head>
   <body>

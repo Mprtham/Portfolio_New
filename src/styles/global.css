@@ -200,17 +200,21 @@ section {
 }
 
 .reveal {
+  opacity: 1;
+}
+
+html.js-ready .reveal {
   opacity: 0;
 }
 
-.reveal.visible {
+html.js-ready .reveal.visible {
   animation: revealUp 600ms var(--ease-out) both;
   animation-delay: var(--delay, 0ms);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal,
-  .reveal.visible {
+  html.js-ready .reveal,
+  html.js-ready .reveal.visible {
     opacity: 1;
     transform: none;
     animation: none;
