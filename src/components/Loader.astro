@@ -1,10 +1,11 @@
 ---
 ---
 <div id="loader-wrapper" style="display:none">
-  <div class="counter-container">
-    <p class="counter" id="loader-count">0</p>
-    <div class="progress-bar" id="loader-progress"></div>
+  <div class="loader-body">
+    <div class="loader-name mono">PM</div>
+    <p class="counter" id="loader-count">0<span class="counter-unit">%</span></p>
   </div>
+  <div class="progress-bar" id="loader-progress"></div>
 </div>
 
 <style>
@@ -13,43 +14,60 @@
     inset: 0;
     z-index: 9998;
     background: var(--ink-900);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     will-change: transform;
-    transition: transform 800ms cubic-bezier(0.76, 0, 0.24, 1);
+    transition: transform 700ms cubic-bezier(0.76, 0, 0.24, 1);
   }
 
   #loader-wrapper.loader--exit {
     transform: translateY(-100%);
   }
 
-  .counter-container {
+  .loader-body {
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    align-items: flex-start;
-    padding: 3rem 4rem;
-    height: 100vh;
-    width: 100vw;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .loader-name {
+    font-size: 0.78rem;
+    letter-spacing: 0.25em;
+    color: var(--text-lo);
+    text-transform: uppercase;
   }
 
   .counter {
     font-family: 'Poppins', system-ui, sans-serif;
-    font-size: clamp(80px, 15vw, 160px);
+    font-size: clamp(64px, 12vw, 120px);
     font-weight: 700;
     color: var(--signal);
     line-height: 1;
     letter-spacing: -0.04em;
-    will-change: contents;
     margin: 0;
   }
 
+  .counter-unit {
+    font-size: 0.4em;
+    letter-spacing: 0;
+    opacity: 0.6;
+    vertical-align: super;
+    margin-left: 2px;
+  }
+
   .progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
     height: 2px;
     background: var(--signal);
     width: 0%;
-    margin-top: 1.25rem;
-    max-width: 100%;
     will-change: width;
     transition: width 50ms linear;
+    box-shadow: 0 0 8px rgba(232, 164, 74, 0.5);
   }
 </style>
 
@@ -68,10 +86,15 @@
     const progressEl = document.getElementById('loader-progress') as HTMLElement;
     if (!countEl || !progressEl) return;
 
+    // Keep the % span, update only the leading text node
+    function setCount(n: number) {
+      countEl!.childNodes[0].textContent = String(n);
+    }
+
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (reduced) {
-      countEl.textContent = '100';
+      setCount(100);
       progressEl.style.width = '100%';
       wrapper.classList.add('loader--exit');
       wrapper.addEventListener('transitionend', () => {
@@ -89,13 +112,13 @@
       const eased = 1 - Math.pow(1 - progress, 3);
       const value = Math.floor(eased * 100);
 
-      countEl!.textContent = String(value);
+      setCount(value);
       progressEl.style.width = `${value}%`;
 
       if (progress < 1) {
         requestAnimationFrame(tick);
       } else {
-        countEl!.textContent = '100';
+        setCount(100);
         progressEl.style.width = '100%';
 
         setTimeout(() => {

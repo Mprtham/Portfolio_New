@@ -14,7 +14,7 @@ const links = [
 <nav class="nav" id="nav" aria-label="Main navigation">
   <div class="nav-inner container">
     <a href="#home" class="nav-logo" aria-label="Back to top">
-      <span class="mono" style="color: var(--signal); font-size: 0.85rem;">PM</span>
+      <span class="logo-mark">PM</span>
     </a>
 
     <ul class="nav-links" role="list">
@@ -41,7 +41,7 @@ const links = [
     right: 0;
     z-index: 100;
     height: 64px;
-    background: rgba(10, 12, 15, 0.85);
+    background: rgba(13, 11, 8, 0.88);
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
     border-bottom: 1px solid var(--line);
@@ -56,14 +56,28 @@ const links = [
   }
 
   .nav-logo {
-    font-family: 'Space Grotesk', sans-serif;
-    font-weight: 700;
-    font-size: 1.1rem;
-    color: var(--text-hi);
     flex-shrink: 0;
     display: flex;
     align-items: center;
-    gap: 6px;
+    text-decoration: none;
+  }
+
+  .logo-mark {
+    font-family: 'Poppins', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.06em;
+    color: var(--signal);
+    border: 1.5px solid rgba(232, 164, 74, 0.4);
+    border-radius: 4px;
+    padding: 2px 8px;
+    line-height: 1.4;
+    transition: border-color 200ms, box-shadow 200ms;
+  }
+
+  .nav-logo:hover .logo-mark {
+    border-color: var(--signal);
+    box-shadow: 0 0 10px rgba(232, 164, 74, 0.2);
   }
 
   .nav-links {
