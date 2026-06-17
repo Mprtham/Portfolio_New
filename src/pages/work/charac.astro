@@ -3,18 +3,18 @@ import CaseStudy from '../../layouts/CaseStudy.astro';
 ---
 
 <CaseStudy
-  title="Charac — NHS-Integrated Pharmacy Analytics"
-  description="Built the Power BI and GA4 analytics layer for one of the UK's fastest-growing pharmacy platforms — turning prescription, delivery and consultation data into self-serve KPIs for pharmacy owners, and driving acquisition on the patient app."
-  role="Analytics Consultant · Commercial Work"
-  period="2024 – Present"
+  title="Charac: NHS-Integrated Pharmacy Analytics"
+  description="Built the Power BI and GA4 analytics layer for one of the UK's fastest-growing pharmacy platforms, turning prescription, delivery and consultation data into self-serve KPIs for pharmacy owners and driving acquisition on the patient app."
+  role="Data Analyst · Commercial Project"
+  period="2024"
   stack={['Power BI', 'DAX', 'GA4', 'SQL', 'Python', 'ETL/ELT', 'GDPR / NHS IG']}
-  outcome="End-to-end analytics layer across the patient app and pharmacy owner portal — prescription KPIs, delivery tracking, consultation funnel, and acquisition cohorts."
+  outcome="End-to-end analytics layer across the patient app and pharmacy owner portal: prescription KPIs, delivery tracking, consultation funnel, and acquisition cohorts."
   liveUrl="https://charac.co.uk"
 >
 
   <h2>The question</h2>
   <p>
-    Charac operates at the intersection of consumer health tech and NHS infrastructure — pharmacy owners need real-time visibility into prescription volumes, delivery SLAs, and consultation demand; the growth team needs acquisition and retention signals from the patient app. The data existed across disparate sources with no unified reporting layer.
+    Charac sits at the intersection of consumer health tech and NHS infrastructure. Pharmacy owners need real-time visibility into prescription volumes, delivery SLAs, and consultation demand; the growth team needs acquisition and retention signals from the patient app. The data existed across disparate sources with no unified reporting layer.
   </p>
   <p>
     The brief: build analytics that pharmacy owners can actually use without a data team behind them, while giving growth stakeholders the product metrics to make acquisition decisions.
@@ -23,12 +23,12 @@ import CaseStudy from '../../layouts/CaseStudy.astro';
   <h2>The approach</h2>
   <h3>Data modelling</h3>
   <p>
-    Mapped the core entities — patient, prescription, pharmacy, delivery, consultation — and built a clean SQL layer that joined operational data to behavioural signals. ETL pipelines pulled from the platform backend and landed data in a schema structured for Power BI's DirectQuery model, keeping KPIs fresh without the latency of scheduled refreshes.
+    Mapped the core entities (patient, prescription, pharmacy, delivery, consultation) and built a clean SQL layer that joined operational data to behavioural signals. ETL pipelines pulled from the platform backend and landed data in a schema structured for Power BI's DirectQuery model, keeping KPIs fresh without the latency of scheduled refreshes.
   </p>
 
   <h3>Power BI layer</h3>
   <p>
-    Designed a pharmacy-owner-facing dashboard with three views: <strong>Prescription Hub</strong> (volume, status, fulfilment SLA), <strong>Delivery Tracker</strong> (on-time rate, exception flags), and <strong>Consultation Demand</strong> (booking trends, capacity vs. demand). DAX measures were written to handle NHS calendar quirks (bank holidays, bank holiday prescription patterns) and to surface actionable exceptions — pharmacies falling below SLA thresholds surfaced immediately at the top of their view.
+    Designed a pharmacy-owner-facing dashboard with three views: <strong>Prescription Hub</strong> (volume, status, fulfilment SLA), <strong>Delivery Tracker</strong> (on-time rate, exception flags), and <strong>Consultation Demand</strong> (booking trends, capacity vs. demand). DAX measures were written to handle NHS calendar quirks (bank holidays, bank holiday prescription patterns) and to surface actionable exceptions: pharmacies falling below SLA thresholds surface immediately at the top of their view.
   </p>
   <p>
     The growth team received a separate executive view: acquisition funnel, patient retention cohorts, and channel attribution from GA4.
@@ -36,11 +36,11 @@ import CaseStudy from '../../layouts/CaseStudy.astro';
 
   <h3>GA4 implementation</h3>
   <p>
-    Audited and extended the existing GA4 setup — defined a clean event taxonomy for the patient app (prescription requests, delivery tracking opens, consultation bookings), validated the data layer, and connected GA4 export to the Power BI acquisition model via BigQuery. This enabled end-to-end attribution from acquisition channel through to first prescription fulfilled.
+    Audited and extended the existing GA4 setup, defining a clean event taxonomy for the patient app (prescription requests, delivery tracking opens, consultation bookings), validated the data layer, and connected GA4 export to the Power BI acquisition model via BigQuery. This enabled end-to-end attribution from acquisition channel through to first prescription fulfilled.
   </p>
 
   <div class="callout">
-    <p><strong>GDPR / NHS IG consideration:</strong> Charac operates as a data processor under NHS Information Governance requirements. All analytics work was scoped to aggregated, pseudonymised data. No patient-identifiable information touched the BI layer — a constraint that shaped every modelling decision.</p>
+    <p><strong>GDPR / NHS IG consideration:</strong> Charac operates as a data processor under NHS Information Governance requirements. All analytics work was scoped to aggregated, pseudonymised data. No patient-identifiable information touched the BI layer, a constraint that shaped every modelling decision.</p>
   </div>
 
   <h2>What I measured</h2>
@@ -79,13 +79,13 @@ import CaseStudy from '../../layouts/CaseStudy.astro';
 
   <h2>What broke / what I'd change</h2>
   <p>
-    <strong>Data freshness vs. model complexity.</strong> DirectQuery gives live data but puts pressure on query performance — a few complex DAX measures caused slow loads on the pharmacy owner view before I rewrote them as pre-aggregated SQL views. The lesson: push complexity upstream (SQL) not downstream (DAX) wherever the model allows.
+    <strong>Data freshness vs. model complexity.</strong> DirectQuery gives live data but puts pressure on query performance: a few complex DAX measures caused slow loads on the pharmacy owner view before I rewrote them as pre-aggregated SQL views. The lesson: push complexity upstream (SQL) not downstream (DAX) wherever the model allows.
   </p>
   <p>
-    <strong>NHS calendar edge cases</strong> surfaced late — prescription volumes drop sharply over bank holiday periods in ways that initially made SLA metrics look anomalous. Adding calendar dimension logic to flag NHS non-working periods was obvious in retrospect, and should be part of any health-data modelling checklist.
+    <strong>NHS calendar edge cases</strong> surfaced late. Prescription volumes drop sharply over bank holiday periods in ways that initially made SLA metrics look anomalous. Adding calendar dimension logic to flag NHS non-working periods was obvious in retrospect, and should be part of any health-data modelling checklist.
   </p>
   <p>
-    <strong>Self-serve adoption.</strong> The dashboards were adopted well by the operations team but pharmacy owners needed more onboarding than expected. Next version would embed contextual tooltips directly in the Power BI views and include a short walkthrough video — analytics only creates value if the people it's built for actually use it.
+    <strong>Self-serve adoption.</strong> The dashboards were adopted well by the operations team but pharmacy owners needed more onboarding than expected. Next version would embed contextual tooltips directly in the Power BI views and include a short walkthrough video. Analytics only creates value if the people it's built for actually use it.
   </p>
 
 </CaseStudy>
