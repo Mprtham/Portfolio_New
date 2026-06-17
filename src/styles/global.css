@@ -104,8 +104,8 @@ a {
 
 /* Section rhythm */
 section {
-  padding-top: clamp(64px, 8vw, 128px);
-  padding-bottom: clamp(64px, 8vw, 128px);
+  padding-top: clamp(88px, 10vw, 144px);
+  padding-bottom: clamp(88px, 10vw, 144px);
 }
 
 /* Layout container */
@@ -162,22 +162,26 @@ section {
 }
 
 /* Scroll reveal */
+@keyframes revealUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
 .reveal {
   opacity: 0;
-  transform: translateY(14px);
-  transition: opacity 400ms var(--ease-out), transform 400ms var(--ease-out);
 }
 
 .reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+  animation: revealUp 600ms var(--ease-out) both;
+  animation-delay: var(--delay, 0ms);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .reveal.visible {
     opacity: 1;
     transform: none;
-    transition: none;
+    animation: none;
   }
   html {
     scroll-behavior: auto;

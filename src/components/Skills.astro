@@ -14,12 +14,12 @@ const stack = ['Power BI', 'BigQuery', 'dbt', 'PostgreSQL', 'GA4', 'Python', 'La
       </div>
     </div>
 
-    <div class="reveal" style="animation-delay: 100ms;">
+    <div class="reveal" style="--delay: 100ms;">
       <SkillsFilter client:visible />
     </div>
 
     <!-- Stack marquee -->
-    <div class="stack-marquee reveal" style="animation-delay: 200ms;" aria-label="Full technology stack">
+    <div class="stack-marquee reveal" style="--delay: 200ms;" aria-label="Full technology stack">
       <div class="marquee-track">
         {[...stack, ...stack].map(t => (
           <span class="marquee-item mono">{t}</span>

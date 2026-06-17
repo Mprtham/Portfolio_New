@@ -47,7 +47,7 @@ const roles = [
 
     <div class="timeline">
       {roles.map((role, i) => (
-        <div class="timeline-item reveal" style={`animation-delay: ${i * 80}ms`}>
+        <div class="timeline-item reveal" style={`--delay: ${i * 80}ms`}>
           <div class="tl-marker">
             <div class="tl-dot"></div>
             {i < roles.length - 1 && <div class="tl-line"></div>}

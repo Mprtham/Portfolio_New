@@ -32,7 +32,7 @@ const stats = [
           full loop — from the business question, through SQL and Python, to the
           Power BI dashboard, to the recommendation that changes the decision.
         </p>
-        <p class="about-body reveal" style="animation-delay: 80ms;">
+        <p class="about-body reveal" style="--delay: 80ms;">
           I work in BigQuery and PostgreSQL, model in Python and dbt, and ship
           executive dashboards people actually use. And because the line between
           analytics and AI keeps moving, I build production AI systems too:
@@ -40,11 +40,11 @@ const stats = [
           detection, and secure RAG platforms.
         </p>
 
-        <div class="chips reveal" style="animation-delay: 120ms;" role="list" aria-label="What I build">
+        <div class="chips reveal" style="--delay: 120ms;" role="list" aria-label="What I build">
           {chips.map((c) => <span class="chip" role="listitem">{c}</span>)}
         </div>
 
-        <div class="stat-band reveal" style="animation-delay: 160ms;">
+        <div class="stat-band reveal" style="--delay: 160ms;">
           {stats.map((s) => (
             <div class="stat-item">
               <span class="stat-value mono">{s.value}</span>

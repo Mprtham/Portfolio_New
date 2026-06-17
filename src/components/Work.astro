@@ -189,7 +189,7 @@ const themeLabels: Record<string, string> = {
         </div>
         <div class="work-grid">
           {projects.filter(p => p.theme === theme).map((p, i) => (
-            <div class="project-card card reveal" style={`animation-delay: ${i * 80}ms`} id={p.id}>
+            <div class="project-card card reveal" style={`--delay: ${i * 80}ms`} id={p.id}>
               <div class="pc-top">
                 <h3 class="pc-title">{p.title}</h3>
                 <p class="pc-desc">{p.description}</p>

@@ -24,7 +24,7 @@ const metrics = [
 
     <div class="impact-grid">
       {metrics.map((m, i) => (
-        <div class="metric-card card reveal" style={`animation-delay: ${i * 60}ms`} data-dir={m.dir}>
+        <div class="metric-card card reveal" style={`--delay: ${i * 60}ms`} data-dir={m.dir}>
           <div class="mc-top">
             <span class={`mc-value mono ${m.dir === 'up' ? 'metric-up' : ''}`}>
               {m.value}
