@@ -104,18 +104,33 @@ const ogImage = '/og.png';
         function tick() {
           if (!pending.length) { revealRaf = null; return; }
           const cvh = window.innerHeight;
-          // Iterate backwards so splice doesn't break indices
+          const toReveal: Array<{ el: HTMLElement; delay: number }> = [];
+
           for (let i = pending.length - 1; i >= 0; i--) {
             const el = pending[i];
             if (el.getBoundingClientRect().top < cvh * 0.88) {
               const delay = parseInt(getComputedStyle(el).getPropertyValue('--delay').trim()) || 0;
+              pending.splice(i, 1);
+              toReveal.push({ el, delay });
+            }
+          }
+
+          if (toReveal.length) {
+            // Phase 1: set transition on all elements
+            toReveal.forEach(({ el, delay }) => {
               el.style.transition = `opacity 0.65s ${EASE} ${delay}ms, transform 0.65s ${EASE} ${delay}ms`;
+            });
+            // Force a style recalc so the browser registers the transition
+            // before we change opacity — without this, browser skips the animation
+            void document.body.offsetWidth;
+            // Phase 2: now change the values (browser will animate from 0→1)
+            toReveal.forEach(({ el }) => {
               el.style.opacity = '1';
               el.style.transform = 'translateY(0)';
               el.classList.add('visible');
-              pending.splice(i, 1);
-            }
+            });
           }
+
           revealRaf = requestAnimationFrame(tick);
         }
 
