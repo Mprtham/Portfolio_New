@@ -73,25 +73,29 @@ const ogImage = '/og.png';
     <Cursor />
     <CursorTrail />
     <script>
+      let revealObserver: IntersectionObserver | null = null;
+
       function initReveals() {
+        if (revealObserver) revealObserver.disconnect();
+
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const reveals = document.querySelectorAll('.reveal:not(.visible)');
+        const reveals = document.querySelectorAll<Element>('.reveal:not(.visible)');
 
         if (reduced) {
           reveals.forEach(el => el.classList.add('visible'));
           return;
         }
 
-        const observer = new IntersectionObserver((entries) => {
+        revealObserver = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
             if (entry.isIntersecting) {
               entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
+              revealObserver!.unobserve(entry.target);
             }
           });
         }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-        reveals.forEach(el => observer.observe(el));
+        reveals.forEach(el => revealObserver!.observe(el));
       }
 
       initReveals();
