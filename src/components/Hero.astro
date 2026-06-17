@@ -274,9 +274,16 @@ const metrics = [
 
   function scheduleHero() {
     const loader = document.getElementById('loader-wrapper');
-    // If loader is visible, wait for it to finish before animating hero
     if (loader && loader.style.display !== 'none') {
-      document.addEventListener('intro:complete', startHeroAnimation, { once: true });
+      // Wait for loader to finish, with hard fallback so hero never stays invisible
+      let done = false;
+      function go() {
+        if (done) return;
+        done = true;
+        startHeroAnimation();
+      }
+      document.addEventListener('intro:complete', go, { once: true });
+      setTimeout(go, 3500);
     } else {
       startHeroAnimation();
     }

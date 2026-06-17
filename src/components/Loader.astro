@@ -72,7 +72,7 @@
 </style>
 
 <script>
-  const DURATION = 1600;
+  const DURATION = 900;
 
   function runLoader() {
     const wrapper = document.getElementById('loader-wrapper') as HTMLElement | null;
@@ -97,14 +97,9 @@
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (reduced) {
-      setCount(100);
-      progressEl.style.width = '100%';
-      wrapper.classList.add('loader--exit');
-      wrapper.addEventListener('transitionend', () => {
-        wrapper.remove();
-        sessionStorage.setItem('loaderDone', '1');
-        document.dispatchEvent(new CustomEvent('intro:complete'));
-      }, { once: true });
+      wrapper.remove();
+      sessionStorage.setItem('loaderDone', '1');
+      document.dispatchEvent(new CustomEvent('intro:complete'));
       return;
     }
 
