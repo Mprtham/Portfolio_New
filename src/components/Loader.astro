@@ -6,6 +6,14 @@
     <div class="progress-bar" id="loader-progress"></div>
   </div>
 </div>
+<script is:inline>
+  (function() {
+    if (sessionStorage.getItem('loaderDone')) {
+      var el = document.getElementById('loader-wrapper');
+      if (el) el.style.display = 'none';
+    }
+  })();
+</script>
 
 <style>
   #loader-wrapper {

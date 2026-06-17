@@ -89,6 +89,21 @@ body {
   overflow-x: hidden;
 }
 
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9990;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.025) 2px,
+    rgba(0, 0, 0, 0.025) 4px
+  );
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: 'Poppins', system-ui, sans-serif;
   color: var(--text-hi);
@@ -207,6 +222,11 @@ section {
   color: var(--down);
 }
 
+/* Magnetic button transition base */
+.btn-primary, .btn-secondary, .nav-cta {
+  transition: transform 300ms ease-out, opacity 200ms, background 200ms, color 200ms, border-color 200ms;
+}
+
 /* Focus ring */
 :focus-visible {
   outline: 2px solid var(--signal);
@@ -229,10 +249,8 @@ section {
   background: var(--text-lo);
 }
 
-::selection {
-  background: var(--signal);
-  color: var(--signal-ink);
-}
+::-moz-selection { background: #E8A44A; color: #0D0B08; }
+::selection      { background: #E8A44A; color: #0D0B08; }
 
 /* View transition animation — fires on page-to-page navigation (not anchor scrolls) */
 @keyframes vtFadeOut {

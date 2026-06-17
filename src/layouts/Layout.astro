@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Cursor from '../components/Cursor.astro';
+import CursorTrail from '../components/CursorTrail.astro';
 import Loader from '../components/Loader.astro';
 import { ClientRouter } from 'astro:transitions';
 
@@ -65,6 +66,7 @@ const ogImage = '/og.png';
     <Nav />
     <slot />
     <Cursor />
+    <CursorTrail />
     <script>
       function initReveal() {
         const observer = new IntersectionObserver(
@@ -81,6 +83,56 @@ const ogImage = '/og.png';
         document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
       }
       document.addEventListener('astro:page-load', initReveal);
+    </script>
+
+    <script>
+      import Lenis from 'lenis';
+      let lenis: InstanceType<typeof Lenis> | null = null;
+      let lenisRaf: number | null = null;
+
+      function initLenis() {
+        if (lenis) lenis.destroy();
+        if (lenisRaf) cancelAnimationFrame(lenisRaf);
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+        lenis = new Lenis({
+          duration: 1.2,
+          easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        });
+
+        function raf(time: number) {
+          lenis!.raf(time);
+          lenisRaf = requestAnimationFrame(raf);
+        }
+        lenisRaf = requestAnimationFrame(raf);
+      }
+
+      document.addEventListener('astro:page-load', initLenis);
+      document.addEventListener('astro:before-swap', () => {
+        if (lenis) { lenis.destroy(); lenis = null; }
+        if (lenisRaf) { cancelAnimationFrame(lenisRaf); lenisRaf = null; }
+      });
+    </script>
+
+    <script>
+      function initMagnetic() {
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const hasHover = window.matchMedia('(hover: hover)').matches;
+        if (reduced || !hasHover) return;
+
+        document.querySelectorAll<HTMLElement>('.btn-primary, .btn-secondary, .nav-cta').forEach(el => {
+          el.addEventListener('mousemove', (e: MouseEvent) => {
+            const rect = el.getBoundingClientRect();
+            const dx = (e.clientX - (rect.left + rect.width / 2)) * 0.3;
+            const dy = (e.clientY - (rect.top + rect.height / 2)) * 0.3;
+            el.style.transform = `translate(${dx}px, ${dy}px)`;
+          });
+          el.addEventListener('mouseleave', () => {
+            el.style.transform = '';
+          });
+        });
+      }
+      document.addEventListener('astro:page-load', initMagnetic);
     </script>
   </body>
 </html>
