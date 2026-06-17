@@ -94,7 +94,7 @@ const ogImage = '/og.png';
             // Hide instantly: override the CSS transition so the hide is a snap, not an animation
             el.style.transition = 'none';
             el.style.opacity = '0';
-            el.style.transform = 'translateY(28px)';
+            el.style.transform = 'translateY(52px) scale(0.97)';
             pending.push(el);
           }
         });
@@ -114,7 +114,7 @@ const ogImage = '/og.png';
               if (el.getBoundingClientRect().top < cvh * 0.88) {
                 // CSS transition is defined (from .reveal in global.css) — just change the values
                 el.style.opacity = '1';
-                el.style.transform = 'translateY(0)';
+                el.style.transform = 'translateY(0) scale(1)';
                 el.classList.add('visible');
                 pending.splice(i, 1);
               }
