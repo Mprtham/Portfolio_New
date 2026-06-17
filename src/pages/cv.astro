@@ -440,4 +440,33 @@ import Layout from '../layouts/Layout.astro';
     .cv-contacts { flex-direction: column; }
     .cv-contact-item { border-right: none; border-bottom: 1px solid var(--line); margin-right: 0; padding-right: 0; }
   }
+
+  @media print {
+    @page { margin: 18mm 16mm; size: A4; }
+
+    main { padding-top: 0 !important; }
+    .cv-page { max-width: 100%; padding: 0; }
+    .cv-actions { display: none; }
+
+    /* Light print theme */
+    body { background: #fff !important; color: #111 !important; }
+    .cv-name { color: #111 !important; }
+    .cv-section-title { color: #B87A28 !important; }
+    .cv-role, .cv-location, .cv-company, .tl-period, .cv-period { color: #444 !important; }
+    .cv-bullets li, .cv-para, .cv-project-desc, .cv-skill-items { color: #333 !important; }
+    .cv-bullets li::before { color: #B87A28 !important; }
+    .cv-project { background: #f8f8f8 !important; border-color: #ddd !important; }
+    .cv-skill-row { background: transparent !important; border-color: #ddd !important; }
+    .cv-skill-row:nth-child(odd) { background: #f8f8f8 !important; }
+    .cv-skill-cat { color: #B87A28 !important; }
+    .cv-contact-item { color: #333 !important; border-color: #ddd !important; }
+    .cv-contact-label { color: #888 !important; }
+    .hairline { border-color: #ddd !important; }
+    .cv-section { border-color: #ddd !important; }
+    .cv-role-block { border-color: #ddd !important; }
+
+    /* Avoid breaking role blocks across pages */
+    .cv-role-block { page-break-inside: avoid; break-inside: avoid; }
+    .cv-project { page-break-inside: avoid; break-inside: avoid; }
+  }
 </style>
