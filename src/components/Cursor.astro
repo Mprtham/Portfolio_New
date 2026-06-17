@@ -1,0 +1,77 @@
+---
+---
+<canvas id="cursor-canvas" aria-hidden="true"></canvas>
+
+<style>
+  #cursor-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 9998;
+  }
+</style>
+
+<script>
+  let cursorRaf: number | null = null;
+  let cursorReady = false;
+
+  function initCursor() {
+    if (cursorReady) return;
+    if (window.matchMedia('(hover: none)').matches) return;
+
+    cursorReady = true;
+
+    const canvas = document.getElementById('cursor-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d')!;
+    let mouseX = -300, mouseY = -300;
+    let curX = -300, curY = -300;
+
+    function resize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    });
+
+    document.addEventListener('mouseleave', () => {
+      mouseX = -300;
+      mouseY = -300;
+    });
+
+    function tick() {
+      curX += (mouseX - curX) * 0.08;
+      curY += (mouseY - curY) * 0.08;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (curX > -100) {
+        const g = ctx.createRadialGradient(curX, curY, 0, curX, curY, 140);
+        g.addColorStop(0, 'rgba(92, 242, 192, 0.12)');
+        g.addColorStop(0.4, 'rgba(92, 242, 192, 0.04)');
+        g.addColorStop(1, 'rgba(92, 242, 192, 0)');
+        ctx.fillStyle = g;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      }
+
+      cursorRaf = requestAnimationFrame(tick);
+    }
+
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      tick();
+    }
+  }
+
+  initCursor();
+  document.addEventListener('astro:page-load', initCursor);
+</script>

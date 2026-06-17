@@ -224,3 +224,8 @@ section {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--text-lo);
 }
+
+::selection {
+  background: var(--signal);
+  color: var(--signal-ink);
+}

@@ -1,0 +1,124 @@
+---
+---
+<canvas id="dot-grid-canvas" class="dot-grid-canvas" aria-hidden="true"></canvas>
+
+<style>
+  .dot-grid-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+  }
+</style>
+
+<script>
+  let dotRaf: number | null = null;
+
+  function initDotGrid() {
+    if (dotRaf) cancelAnimationFrame(dotRaf);
+
+    const canvas = document.getElementById('dot-grid-canvas') as HTMLCanvasElement;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d')!;
+    const isTouch = window.matchMedia('(hover: none)').matches;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const DOT_COUNT = 80;
+    const MAX_DIST = 130;
+
+    let w = 0, h = 0;
+    let mouseX = -1000, mouseY = -1000;
+    let targetX = -1000, targetY = -1000;
+    let dots: { baseX: number; baseY: number; speedX: number; speedY: number; phase: number }[] = [];
+
+    function resize() {
+      const parent = canvas.parentElement;
+      if (!parent) return;
+      const rect = parent.getBoundingClientRect();
+      w = rect.width;
+      h = rect.height;
+      canvas.width = w * devicePixelRatio;
+      canvas.height = h * devicePixelRatio;
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+      generateDots();
+    }
+
+    function generateDots() {
+      dots = [];
+      for (let i = 0; i < DOT_COUNT; i++) {
+        dots.push({
+          baseX: Math.random() * w,
+          baseY: Math.random() * h,
+          speedX: 0.4 + Math.random() * 0.6,
+          speedY: 0.3 + Math.random() * 0.5,
+          phase: Math.random() * Math.PI * 2,
+        });
+      }
+    }
+
+    function onMouseMove(e: MouseEvent) {
+      const rect = canvas.getBoundingClientRect();
+      targetX = e.clientX - rect.left;
+      targetY = e.clientY - rect.top;
+    }
+
+    window.addEventListener('mousemove', onMouseMove);
+    window.addEventListener('resize', resize);
+    resize();
+
+    if (isTouch || reduced) {
+      ctx.clearRect(0, 0, w, h);
+      dots.forEach(dot => {
+        ctx.beginPath();
+        ctx.arc(dot.baseX, dot.baseY, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(92, 242, 192, 0.12)';
+        ctx.fill();
+      });
+      return;
+    }
+
+    function tick() {
+      mouseX += (targetX - mouseX) * 0.08;
+      mouseY += (targetY - mouseY) * 0.08;
+
+      ctx.clearRect(0, 0, w, h);
+
+      const t = Date.now() * 0.001;
+
+      dots.forEach(dot => {
+        const x = dot.baseX + Math.sin(t * dot.speedX + dot.phase) * 16;
+        const y = dot.baseY + Math.cos(t * dot.speedY + dot.phase) * 16;
+
+        const dx = mouseX - x;
+        const dy = mouseY - y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+
+        let radius = 1.5;
+        let opacity = 0.15;
+
+        if (dist < MAX_DIST && mouseX > -100) {
+          const proximity = 1 - dist / MAX_DIST;
+          radius = 1.5 + 2.5 * proximity;
+          opacity = 0.15 + 0.35 * proximity;
+        }
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(92, 242, 192, ${opacity})`;
+        ctx.fill();
+      });
+
+      dotRaf = requestAnimationFrame(tick);
+    }
+
+    tick();
+  }
+
+  initDotGrid();
+  document.addEventListener('astro:page-load', initDotGrid);
+  document.addEventListener('astro:before-swap', () => {
+    if (dotRaf) cancelAnimationFrame(dotRaf);
+  });
+</script>
