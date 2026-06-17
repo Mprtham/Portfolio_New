@@ -7,10 +7,9 @@ interface Stat {
 
 export default function SiteStats() {
   const [stats, setStats] = useState<Stat[]>([
-    { value: '—', label: 'page load' },
     { value: '7', label: 'pages' },
     { value: '5', label: 'case studies' },
-    { value: '0KB', label: 'JS on first load' },
+    { value: '<1KB', label: 'JS on load' },
   ]);
 
   useEffect(() => {
