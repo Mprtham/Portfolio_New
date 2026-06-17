@@ -1,5 +1,4 @@
 ---
-import HeroThree from './HeroThree.astro';
 import DotGrid from './DotGrid.astro';
 const heroLine1 = 'PRATHAMESH';
 const heroLine2 = 'MISHRA';
@@ -14,10 +13,8 @@ const metrics = [
 ---
 
 <section id="home" class="hero">
-  <!-- Fallback dot grid (always rendered; hidden by JS when Three.js loads) -->
   <DotGrid />
-  <!-- Three.js 3D particle network (replaces dot grid on WebGL-capable devices) -->
-  <HeroThree />
+  <div class="hero-orb" aria-hidden="true"></div>
   <!-- Ambient sparkline -->
   <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
 
@@ -72,6 +69,25 @@ const metrics = [
     overflow: hidden;
   }
 
+  .hero-orb {
+    position: absolute;
+    top: 10%;
+    right: 5%;
+    width: clamp(300px, 50vw, 700px);
+    height: clamp(300px, 50vw, 700px);
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(232, 164, 74, 0.12) 0%, transparent 70%);
+    filter: blur(60px);
+    pointer-events: none;
+    z-index: 0;
+    animation: orb-drift 10s ease-in-out infinite alternate;
+  }
+
+  @keyframes orb-drift {
+    from { transform: translate(0, 0) scale(1); }
+    to   { transform: translate(-40px, 30px) scale(1.1); }
+  }
+
   .hero-canvas {
     position: absolute;
     inset: 0;
@@ -79,6 +95,7 @@ const metrics = [
     height: 100%;
     opacity: 0.18;
     pointer-events: none;
+    z-index: 1;
   }
 
   @keyframes heroFadeUp {
@@ -89,10 +106,6 @@ const metrics = [
   .hero-animate {
     opacity: 0;
     animation: heroFadeUp 600ms var(--ease-out) forwards;
-    animation-delay: calc(0.8s + var(--delay, 0ms));
-  }
-
-  :global(body.loader-done) .hero-animate {
     animation-delay: var(--delay, 0ms);
   }
 
@@ -101,9 +114,14 @@ const metrics = [
       opacity: 1;
       animation: none;
     }
+    .hero-orb {
+      animation: none;
+    }
   }
 
   .hero-inner {
+    position: relative;
+    z-index: 2;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -212,6 +230,8 @@ const metrics = [
     background: var(--ink-800);
     padding: 14px 0;
     flex-shrink: 0;
+    position: relative;
+    z-index: 2;
   }
 
   .metric-track {
@@ -250,6 +270,7 @@ const metrics = [
     font-size: var(--step--1);
     color: var(--text-lo);
   }
+
   .hero-char {
     display: inline-block;
   }
@@ -257,6 +278,9 @@ const metrics = [
 
 <script>
   import gsap from 'gsap';
+  import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+  gsap.registerPlugin(ScrollTrigger);
 
   function runHero() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -264,14 +288,24 @@ const metrics = [
     const chars = document.querySelectorAll<HTMLElement>('.hero-char');
     if (!chars.length) return;
 
-    const delay = document.body.classList.contains('loader-done') ? 0 : 0.8;
     gsap.from(chars, {
       opacity: 0,
       y: 36,
       stagger: 0.04,
       duration: 0.65,
       ease: 'power3.out',
-      delay
+      delay: 0.15,
+    });
+
+    gsap.to('.hero-name', {
+      y: -80,
+      ease: 'none',
+      scrollTrigger: {
+        trigger: '#home',
+        start: 'top top',
+        end: 'bottom top',
+        scrub: true,
+      },
     });
   }
 
@@ -316,7 +350,6 @@ const metrics = [
 
       const seg = w / (NUM - 1);
 
-      // Draw line
       ctx.beginPath();
       ctx.strokeStyle = '#E8A44A';
       ctx.lineWidth = 1.5;
@@ -331,7 +364,6 @@ const metrics = [
       }
       ctx.stroke();
 
-      // Dot at tip
       if (end > 0) {
         const tx = (end - 1) * seg;
         const ty = h - points[end - 1] * h;

@@ -102,6 +102,25 @@ body {
   line-height: 1.6;
 }
 
+#main {
+  position: relative;
+}
+
+#main::before,
+#main::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 1px;
+  background-color: var(--line);
+  pointer-events: none;
+  z-index: 0;
+}
+
+#main::before { left: clamp(10px, 2.4vw, 29px); }
+#main::after  { right: clamp(10px, 2.4vw, 29px); }
+
 .scanlines {
   position: fixed;
   top: 0;
