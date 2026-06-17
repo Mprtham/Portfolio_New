@@ -18,8 +18,9 @@ export default function SiteStats() {
     const tryRead = () => {
       const nav = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
       if (nav) {
-        const lcp = nav.loadEventEnd - nav.startTime;
-        const loadStr = lcp > 0 ? `${(lcp / 1000).toFixed(2)}s` : '—';
+        const loadEnd = nav.loadEventEnd > 0 ? nav.loadEventEnd : performance.now();
+        const lcp = loadEnd - nav.startTime;
+        const loadStr = `${(lcp / 1000).toFixed(2)}s`;
 
         // Estimate transferred JS size
         const jsEntries = performance.getEntriesByType('resource') as PerformanceResourceTiming[];
