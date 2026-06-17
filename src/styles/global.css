@@ -196,23 +196,16 @@ section {
   white-space: nowrap;
 }
 
-/* Scroll reveal */
-@keyframes revealUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
+/* Scroll reveal — JS-driven transitions only, no CSS animation */
 .reveal.visible {
-  animation: revealUp 600ms var(--ease-out) both;
-  animation-delay: var(--delay, 0ms);
+  /* marker class; actual transition driven by inline styles in initReveal() */
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal,
-  .reveal.visible {
+  .reveal {
     opacity: 1 !important;
     transform: none !important;
-    animation: none !important;
+    transition: none !important;
   }
   html {
     scroll-behavior: auto;

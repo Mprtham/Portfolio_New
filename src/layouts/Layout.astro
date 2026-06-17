@@ -73,39 +73,53 @@ const ogImage = '/og.png';
     <CursorTrail />
     <script>
       function initReveal() {
-        const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+        const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const vh = window.innerHeight;
+        const EASE = 'cubic-bezier(0.22,1,0.36,1)';
+
+        // Skip elements already revealed
+        const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal:not(.visible)'));
         if (!els.length) return;
 
-        const observer = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((e) => {
-              if (e.isIntersecting) {
-                const el = e.target as HTMLElement;
-                el.style.removeProperty('opacity');
-                el.style.removeProperty('transform');
-                el.style.removeProperty('transition');
-                el.classList.add('visible');
-                observer.unobserve(el);
-              }
-            });
-          },
-          { threshold: 0.06 }
-        );
+        if (reduced) {
+          els.forEach(el => el.classList.add('visible'));
+          return;
+        }
 
-        const vh = window.innerHeight;
-        els.forEach((el) => {
-          const top = el.getBoundingClientRect().top;
-          if (top < vh * 0.92) {
-            // Already in/near viewport — show immediately, no hide
-            el.classList.add('visible');
+        // Separate in-viewport vs below-fold
+        const belowFold: HTMLElement[] = [];
+        els.forEach(el => {
+          if (el.getBoundingClientRect().top < vh * 0.9) {
+            el.classList.add('visible'); // already on screen — no animation needed
           } else {
-            // Below fold — hide via inline style, animate in on scroll
+            // Hide before observer fires
             el.style.opacity = '0';
-            el.style.transform = 'translateY(20px)';
-            el.style.transition = 'opacity 600ms ease-out, transform 600ms ease-out';
-            observer.observe(el);
+            el.style.transform = 'translateY(28px)';
+            belowFold.push(el);
           }
         });
+
+        if (!belowFold.length) return;
+
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(e => {
+            if (!e.isIntersecting) return;
+            const el = e.target as HTMLElement;
+            const delay = parseInt(getComputedStyle(el).getPropertyValue('--delay').trim()) || 0;
+
+            // rAF ensures browser has committed the opacity:0 state before we transition
+            requestAnimationFrame(() => {
+              el.style.transition = `opacity 0.65s ${EASE} ${delay}ms, transform 0.65s ${EASE} ${delay}ms`;
+              el.style.opacity = '1';
+              el.style.transform = 'translateY(0)';
+              el.classList.add('visible');
+            });
+
+            observer.unobserve(el);
+          });
+        }, { threshold: 0.07 });
+
+        belowFold.forEach(el => observer.observe(el));
       }
 
       initReveal();
