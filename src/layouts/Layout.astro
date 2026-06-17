@@ -60,10 +60,9 @@ const ogImage = '/og.png';
     </script>
 
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <!-- Prevent flash of wrong theme + enable JS-driven reveal animations -->
+    <!-- Prevent flash of wrong theme -->
     <script is:inline>
       if (localStorage.getItem('theme') === 'light') document.documentElement.classList.add('light');
-      document.documentElement.classList.add('js-ready');
     </script>
   </head>
   <body>
@@ -74,19 +73,42 @@ const ogImage = '/og.png';
     <CursorTrail />
     <script>
       function initReveal() {
+        const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal'));
+        if (!els.length) return;
+
         const observer = new IntersectionObserver(
           (entries) => {
             entries.forEach((e) => {
               if (e.isIntersecting) {
-                e.target.classList.add('visible');
-                observer.unobserve(e.target);
+                const el = e.target as HTMLElement;
+                el.style.removeProperty('opacity');
+                el.style.removeProperty('transform');
+                el.style.removeProperty('transition');
+                el.classList.add('visible');
+                observer.unobserve(el);
               }
             });
           },
-          { threshold: 0.08 }
+          { threshold: 0.06 }
         );
-        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+        const vh = window.innerHeight;
+        els.forEach((el) => {
+          const top = el.getBoundingClientRect().top;
+          if (top < vh * 0.92) {
+            // Already in/near viewport — show immediately, no hide
+            el.classList.add('visible');
+          } else {
+            // Below fold — hide via inline style, animate in on scroll
+            el.style.opacity = '0';
+            el.style.transform = 'translateY(20px)';
+            el.style.transition = 'opacity 600ms ease-out, transform 600ms ease-out';
+            observer.observe(el);
+          }
+        });
       }
+
+      initReveal();
       document.addEventListener('astro:page-load', initReveal);
     </script>
 

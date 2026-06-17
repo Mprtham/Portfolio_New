@@ -171,12 +171,15 @@ section {
   background: var(--ink-800);
   border: 1px solid var(--line);
   border-radius: 12px;
-  transition: border-color 300ms var(--ease-out), transform 200ms var(--ease-out);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 300ms var(--ease-out), transform 250ms var(--ease-out), box-shadow 300ms var(--ease-out);
 }
 
 .card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--signal) 40%, var(--line));
+  transform: translateY(-3px);
+  border-color: rgba(232, 164, 74, 0.5);
+  box-shadow: 0 8px 32px rgba(232, 164, 74, 0.12), 0 0 0 1px rgba(232, 164, 74, 0.15);
 }
 
 /* Chip */
@@ -199,25 +202,17 @@ section {
   to   { opacity: 1; transform: translateY(0); }
 }
 
-.reveal {
-  opacity: 1;
-}
-
-html.js-ready .reveal {
-  opacity: 0;
-}
-
-html.js-ready .reveal.visible {
+.reveal.visible {
   animation: revealUp 600ms var(--ease-out) both;
   animation-delay: var(--delay, 0ms);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  html.js-ready .reveal,
-  html.js-ready .reveal.visible {
-    opacity: 1;
-    transform: none;
-    animation: none;
+  .reveal,
+  .reveal.visible {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
   }
   html {
     scroll-behavior: auto;

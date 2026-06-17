@@ -83,7 +83,7 @@
       dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`;
     };
 
-    const hoverTargets = 'a, button, [data-hover]';
+    const hoverTargets = 'a, button, [data-hover], .card, .chip, .hl-chip';
 
     cursorOverHandler = (e: MouseEvent) => {
       if ((e.target as HTMLElement).closest(hoverTargets)) {

@@ -125,6 +125,17 @@ const roles = [
   .tl-content {
     padding: 28px;
     margin-bottom: 16px;
+    cursor: default;
+  }
+
+  .timeline-item:hover .tl-dot {
+    box-shadow: 0 0 16px rgba(232, 164, 74, 0.9), 0 0 32px rgba(232, 164, 74, 0.4);
+    transform: scale(1.3);
+    transition: box-shadow 250ms, transform 250ms;
+  }
+
+  .tl-dot {
+    transition: box-shadow 250ms, transform 250ms;
   }
 
   .tl-top {
