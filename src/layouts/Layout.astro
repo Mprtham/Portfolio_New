@@ -66,71 +66,36 @@ const ogImage = '/og.png';
     </script>
   </head>
   <body>
+    <div class="scanlines" aria-hidden="true"></div>
     <Nav />
     <ThemeToggle />
     <slot />
     <Cursor />
     <CursorTrail />
     <script>
-      // IntersectionObserver does NOT work with Lenis (Lenis intercepts native scroll).
-      // Use getBoundingClientRect() in a RAF loop instead — always reflects true visual position.
-      let revealRaf: number | null = null;
-
-      function initReveal() {
-        if (revealRaf) { cancelAnimationFrame(revealRaf); revealRaf = null; }
-
+      function initReveals() {
         const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        const els = Array.from(document.querySelectorAll<HTMLElement>('.reveal:not(.visible)'));
-        if (!els.length) return;
-        if (reduced) { els.forEach(el => el.classList.add('visible')); return; }
+        const reveals = document.querySelectorAll('.reveal:not(.visible)');
 
-        const vh = window.innerHeight;
-        const pending: HTMLElement[] = [];
+        if (reduced) {
+          reveals.forEach(el => el.classList.add('visible'));
+          return;
+        }
 
-        els.forEach(el => {
-          if (el.getBoundingClientRect().top < vh * 0.9) {
-            el.classList.add('visible');
-          } else {
-            // Hide instantly: override the CSS transition so the hide is a snap, not an animation
-            el.style.transition = 'none';
-            el.style.opacity = '0';
-            el.style.transform = 'translateY(52px) scale(0.97)';
-            pending.push(el);
-          }
-        });
-
-        if (!pending.length) return;
-
-        // Next frame: restore CSS transition (elements are now hidden; CSS transition takes over again).
-        // Tick starts in the frame after that so elements are definitely painted-hidden before we watch them.
-        requestAnimationFrame(() => {
-          pending.forEach(el => { el.style.transition = ''; });
-
-          function tick() {
-            if (!pending.length) { revealRaf = null; return; }
-            const cvh = window.innerHeight;
-            for (let i = pending.length - 1; i >= 0; i--) {
-              const el = pending[i];
-              if (el.getBoundingClientRect().top < cvh * 0.88) {
-                // CSS transition is defined (from .reveal in global.css) — just change the values
-                el.style.opacity = '1';
-                el.style.transform = 'translateY(0) scale(1)';
-                el.classList.add('visible');
-                pending.splice(i, 1);
-              }
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
             }
-            revealRaf = requestAnimationFrame(tick);
-          }
+          });
+        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
 
-          revealRaf = requestAnimationFrame(tick);
-        });
+        reveals.forEach(el => observer.observe(el));
       }
 
-      initReveal();
-      document.addEventListener('astro:page-load', initReveal);
-      document.addEventListener('astro:before-swap', () => {
-        if (revealRaf) { cancelAnimationFrame(revealRaf); revealRaf = null; }
-      });
+      initReveals();
+      document.addEventListener('astro:page-load', initReveals);
     </script>
 
     <script>

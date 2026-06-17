@@ -72,64 +72,44 @@
 </style>
 
 <script>
-  const DURATION = 900;
+  const wrapper = document.getElementById('loader-wrapper') as HTMLElement | null;
+  if (!wrapper) throw new Error('no wrapper');
 
-  function runLoader() {
-    const wrapper = document.getElementById('loader-wrapper') as HTMLElement | null;
-    if (!wrapper) return;
-    if (sessionStorage.getItem('loaderDone')) {
-      document.body.classList.add('loader-done');
-      wrapper.style.display = 'none';
-      return;
-    }
-    // Prevent double-run (immediate call + astro:page-load both invoke this)
-    if (wrapper.style.display !== 'none') return;
-    wrapper.style.display = '';
+  if (sessionStorage.getItem('loaderDone')) {
+    wrapper.remove();
+    document.body.classList.add('loader-done');
+  } else {
     const countEl = document.getElementById('loader-count');
     const progressEl = document.getElementById('loader-progress') as HTMLElement;
-    if (!countEl || !progressEl) return;
+    if (!countEl || !progressEl) throw new Error('no els');
 
-    function setCount(n: number) {
-      countEl!.childNodes[0].textContent = String(n);
-    }
+    wrapper.style.display = '';
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      wrapper.remove();
-      document.body.classList.add('loader-done');
-      sessionStorage.setItem('loaderDone', '1');
-      return;
-    }
+    const DURATION = 800;
+    const start = performance.now();
 
-    const startTime = performance.now();
+    function frame(now: number) {
+      const elapsed = now - start;
+      const pct = Math.min(elapsed / DURATION, 1);
+      const count = Math.floor(pct * 100);
 
-    function tick(now: number) {
-      const progress = Math.min((now - startTime) / DURATION, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      const value = Math.floor(eased * 100);
+      countEl!.childNodes[0].textContent = String(count);
+      progressEl.style.width = `${pct * 100}%`;
 
-      setCount(value);
-      progressEl.style.width = `${value}%`;
-
-      if (progress < 1) {
-        requestAnimationFrame(tick);
+      if (pct < 1) {
+        requestAnimationFrame(frame);
       } else {
-        setCount(100);
+        countEl!.childNodes[0].textContent = '100';
         progressEl.style.width = '100%';
-
-        setTimeout(() => {
-          wrapper!.classList.add('loader--exit');
-          wrapper!.addEventListener('transitionend', () => {
-            wrapper!.remove();
-            document.body.classList.add('loader-done');
-            sessionStorage.setItem('loaderDone', '1');
-          }, { once: true });
-        }, 180);
+        wrapper!.classList.add('loader--exit');
+        wrapper!.addEventListener('transitionend', () => {
+          wrapper!.remove();
+          document.body.classList.add('loader-done');
+          sessionStorage.setItem('loaderDone', '1');
+        }, { once: true });
       }
     }
 
-    requestAnimationFrame(tick);
+    requestAnimationFrame(frame);
   }
-
-  runLoader();
-  document.addEventListener('astro:page-load', runLoader);
 </script>

@@ -85,6 +85,7 @@ html.light {
 }
 
 html {
+  overflow-x: hidden;
   scroll-behavior: smooth;
   scroll-padding-top: 80px;
   -webkit-font-smoothing: antialiased;
@@ -99,22 +100,17 @@ body {
   font-family: 'Inter', system-ui, sans-serif;
   font-size: var(--step-0);
   line-height: 1.6;
-  overflow-x: hidden;
 }
 
-body::after {
-  content: '';
+.scanlines {
   position: fixed;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 9990;
-  background: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(0, 0, 0, 0.025) 2px,
-    rgba(0, 0, 0, 0.025) 4px
-  );
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px);
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -196,19 +192,20 @@ section {
   white-space: nowrap;
 }
 
-/* Scroll reveal — transition always defined in CSS, JS only changes opacity/transform values */
 .reveal {
-  transition:
-    opacity   0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms),
-    transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) var(--delay, 0ms);
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
 }
 
 .reveal.visible {
-  /* marker class only */
+  opacity: 1;
+  transform: translateY(0);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .reveal {
+  .reveal,
+  .reveal.visible {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
