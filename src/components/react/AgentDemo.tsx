@@ -151,7 +151,7 @@ export default function AgentDemo() {
       <div className="ad-messages" key={renderKey}>
         {phase === 'idle' && (
           <div className="ad-start">
-            <p className="ad-start-text">Watch the agent run end-to-end analysis — data profiling, statistical tests, sandboxed execution, and revenue modelling.</p>
+            <p className="ad-start-text">Watch the agent run end-to-end analysis: data profiling, statistical tests, sandboxed execution, and revenue modelling.</p>
             <button className="ad-start-btn" onClick={start}>▶ Run demo analysis</button>
           </div>
         )}

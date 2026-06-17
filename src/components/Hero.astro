@@ -1,5 +1,5 @@
 ---
-import DotGrid from './DotGrid.astro';
+import HeroThree from './HeroThree.astro';
 const heroLine1 = 'PRATHAMESH';
 const heroLine2 = 'MISHRA';
 const metrics = [
@@ -13,10 +13,10 @@ const metrics = [
 ---
 
 <section id="home" class="hero">
+  <!-- Three.js 3D particle network background -->
+  <HeroThree />
   <!-- Ambient sparkline -->
   <canvas id="hero-canvas" class="hero-canvas" aria-hidden="true"></canvas>
-  <!-- Interactive dot grid -->
-  <DotGrid />
 
   <div class="container hero-inner">
     <div class="hero-eyebrow mono hero-animate" style="--delay: 0ms">
@@ -35,7 +35,7 @@ const metrics = [
     </p>
 
     <p class="hero-sub hero-animate" style="--delay: 220ms">
-      Data &amp; Product Analyst — Power BI, SQL, GA4 — and a builder of production AI systems.
+      Data &amp; Product Analyst · Power BI, SQL, GA4 · Builder of production AI systems.
     </p>
 
     <div class="hero-ctas hero-animate" style="--delay: 300ms">

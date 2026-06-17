@@ -47,15 +47,15 @@
     const particles: Particle[] = [];
 
     trailMouseHandler = (e: MouseEvent) => {
-      for (let i = 0; i < 4; i++) {
+      for (let i = 0; i < 5; i++) {
         particles.push({
           x: e.clientX,
           y: e.clientY,
-          vx: (Math.random() - 0.5) * 3,
-          vy: (Math.random() - 0.5) * 3 - 0.5,
-          life: 45,
-          maxLife: 45,
-          size: 4 + Math.random() * 3,
+          vx: (Math.random() - 0.5) * 4,
+          vy: (Math.random() - 0.5) * 4 - 0.8,
+          life: 55,
+          maxLife: 55,
+          size: 5 + Math.random() * 4,
         });
       }
     };
@@ -80,10 +80,13 @@
         const opacity = t * 0.85;
         const radius = p.size * t;
 
+        ctx.shadowBlur = radius * 5;
+        ctx.shadowColor = `rgba(232, 164, 74, ${opacity * 0.7})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
         ctx.fillStyle = `rgba(232, 164, 74, ${opacity})`;
         ctx.fill();
+        ctx.shadowBlur = 0;
       }
 
       trailRaf = requestAnimationFrame(tick);

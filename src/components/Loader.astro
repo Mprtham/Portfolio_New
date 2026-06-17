@@ -1,19 +1,11 @@
 ---
 ---
-<div id="loader-wrapper">
+<div id="loader-wrapper" style="display:none">
   <div class="counter-container">
     <p class="counter" id="loader-count">0</p>
     <div class="progress-bar" id="loader-progress"></div>
   </div>
 </div>
-<script is:inline>
-  (function() {
-    if (sessionStorage.getItem('loaderDone')) {
-      var el = document.getElementById('loader-wrapper');
-      if (el) el.style.display = 'none';
-    }
-  })();
-</script>
 
 <style>
   #loader-wrapper {
@@ -65,12 +57,16 @@
   const DURATION = 1600;
 
   function runLoader() {
-    if (sessionStorage.getItem('loaderDone')) return;
-
-    const wrapper = document.getElementById('loader-wrapper');
+    const wrapper = document.getElementById('loader-wrapper') as HTMLElement | null;
+    if (!wrapper) return;
+    if (sessionStorage.getItem('loaderDone')) {
+      wrapper.style.display = 'none';
+      return;
+    }
+    wrapper.style.display = '';
     const countEl = document.getElementById('loader-count');
     const progressEl = document.getElementById('loader-progress') as HTMLElement;
-    if (!wrapper || !countEl || !progressEl) return;
+    if (!countEl || !progressEl) return;
 
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -117,4 +113,5 @@
   }
 
   runLoader();
+  document.addEventListener('astro:page-load', runLoader);
 </script>

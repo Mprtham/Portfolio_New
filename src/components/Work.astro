@@ -15,9 +15,9 @@ interface Project {
 const projects: Project[] = [
   {
     id: 'charac',
-    title: 'Charac — NHS-Integrated Pharmacy Platform',
+    title: 'Charac: NHS-Integrated Pharmacy Platform',
     subtitle: 'Flagship Commercial Work',
-    description: 'Built the Power BI + GA4 analytics layer for one of the UK\'s fastest-growing pharmacy platforms — turning prescription, delivery and consultation data into self-serve KPIs for pharmacy owners, and driving acquisition growth on the patient app. Operates as a GDPR/NHS-IG data processor.',
+    description: 'Built the Power BI + GA4 analytics layer for one of the UK\'s fastest-growing pharmacy platforms, turning prescription, delivery and consultation data into self-serve KPIs for pharmacy owners and driving acquisition growth on the patient app. Operates as a GDPR/NHS-IG data processor.',
     stack: ['Power BI', 'DAX', 'GA4', 'SQL', 'Python', 'ETL/ELT', 'GDPR / NHS IG'],
     outcome: 'Live analytics layer across patient app & pharmacy owner portal',
     links: [
@@ -30,7 +30,7 @@ const projects: Project[] = [
   },
   {
     id: 'sentinel',
-    title: 'Sentinel — Real-Time Anomaly Detection Agent',
+    title: 'Sentinel: Real-Time Anomaly Detection Agent',
     subtitle: 'Production AI Systems',
     description: 'Ingests 100+ events/sec, flags statistical anomalies, and writes AI root-cause reports in <90s. Four-node LangGraph agent with <10% false-positive rate.',
     stack: ['LangGraph', 'Groq', 'DuckDB', 'Kafka', 'FastAPI', 'WebSocket', 'Docker'],
@@ -45,7 +45,7 @@ const projects: Project[] = [
     id: 'agentic-analyst',
     title: 'Agentic Data Analyst',
     subtitle: 'Production AI Systems',
-    description: 'An autonomous analyst that runs end-to-end analysis on tabular data — ReAct loop over a registry of statistical tests, sandboxed Python execution, auto-generated reports.',
+    description: 'An autonomous analyst that runs end-to-end analysis on tabular data: ReAct loop over a registry of statistical tests, sandboxed Python execution, auto-generated reports.',
     stack: ['ReAct', 'Claude Sonnet', 'FastAPI', 'Polars', 'Plotly', 'ChromaDB', 'Docker'],
     outcome: 'Full end-to-end analysis in under 60s · sandboxed execution',
     links: [
@@ -56,7 +56,7 @@ const projects: Project[] = [
   },
   {
     id: 'coder-buddy',
-    title: 'Coder Buddy — Multi-Agent AI Engineer',
+    title: 'Coder Buddy: Multi-Agent AI Engineer',
     subtitle: 'Production AI Systems',
     description: 'Planner → Architect → Coder pipeline (LangGraph) that turns a prompt into a modular codebase with a streaming React UI.',
     stack: ['LangGraph', 'FastAPI', 'React', 'Vite', 'Tailwind', 'Groq'],
@@ -68,7 +68,7 @@ const projects: Project[] = [
   },
   {
     id: 'peopleops',
-    title: 'PeopleOps Analytics — HR Attrition & Retention Platform',
+    title: 'PeopleOps Analytics: HR Attrition & Retention Platform',
     subtitle: 'Data Engineering & ML',
     description: 'End-to-end HR analytics on BigQuery + dbt + Power BI. Predicts who\'s at risk of leaving before they decide to. Leakage-proof point-in-time model, ROC-AUC 0.665, Precision@top-10% 55.1%, 3× PR-AUC over baseline. 75/75 dbt tests, Power BI engineered like code (PBIP in Git, BPA in CI).',
     stack: ['BigQuery', 'dbt', 'Power BI', 'PBIP', 'FastAPI', 'scikit-learn', 'SHAP', 'GitHub Actions'],
@@ -82,7 +82,7 @@ const projects: Project[] = [
   },
   {
     id: 'sql-forge',
-    title: 'SQL Forge — BigQuery + dbt Text-to-SQL Fine-Tuner',
+    title: 'SQL Forge: BigQuery + dbt Text-to-SQL Fine-Tuner',
     subtitle: 'Data Engineering & ML',
     description: 'Fine-tuned Phi-3-mini for BigQuery-dialect + dbt SQL. 15% → 55% exact-match accuracy, 60% → 90% parse accuracy. Model + datasets published to HuggingFace.',
     stack: ['Phi-3', 'Unsloth', 'LoRA', 'TRL DPO', 'BigQuery', 'dbt', 'FastAPI', 'Streamlit'],
@@ -94,7 +94,7 @@ const projects: Project[] = [
   },
   {
     id: 'rag-observatory',
-    title: 'RAG Observatory — Production RAG with Full Observability',
+    title: 'RAG Observatory: Production RAG with Full Observability',
     subtitle: 'Trustworthy AI',
     description: 'Cross-encoder reranking + citation enforcement + Langfuse tracing (latency, $/query, tokens) + RAGAS CI quality gates. The 70% of AI portfolios skip.',
     stack: ['FastAPI', 'ChromaDB', 'Groq', 'Langfuse', 'RAGAS', 'GitHub Actions', 'Docker'],
@@ -106,7 +106,7 @@ const projects: Project[] = [
   },
   {
     id: 'securequery',
-    title: 'SecureQuery AI — Secure RAG with RBAC',
+    title: 'SecureQuery AI: Secure RAG with RBAC',
     subtitle: 'Trustworthy AI',
     description: 'Defence-in-depth role-based access (Finance/HR/C-level), PII masking, JWT, guardrails, cost tracking. 185 tests passing in ~2s.',
     stack: ['FastAPI', 'Qdrant', 'Azure OpenAI', 'Streamlit', 'JWT', 'Docker'],
@@ -132,9 +132,9 @@ const projects: Project[] = [
 ];
 
 const themeLabels: Record<string, string> = {
-  ai: 'Theme A — Production AI Systems',
-  data: 'Theme B — Data Engineering & ML',
-  trustworthy: 'Theme C — Trustworthy, Observable AI',
+  ai: 'Theme A: Production AI Systems',
+  data: 'Theme B: Data Engineering & ML',
+  trustworthy: 'Theme C: Trustworthy, Observable AI',
 };
 ---
 
@@ -151,7 +151,7 @@ const themeLabels: Record<string, string> = {
         <div class="card-preview" data-theme="flagship" aria-hidden="true"></div>
         <div class="flagship-inner">
           <div class="flagship-left">
-            <div class="flagship-badge mono">★ Flagship — Commercial / Client Work</div>
+            <div class="flagship-badge mono">★ Flagship / Commercial Client Work</div>
             <h3 class="flagship-title">{p.title}</h3>
             <p class="flagship-desc">{p.description}</p>
             <div class="card-stack">
