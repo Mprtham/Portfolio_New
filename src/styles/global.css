@@ -229,3 +229,27 @@ section {
   background: var(--signal);
   color: var(--signal-ink);
 }
+
+/* View transition animation — fires on page-to-page navigation (not anchor scrolls) */
+@keyframes vtFadeOut {
+  to { opacity: 0; transform: translateY(-8px); }
+}
+
+@keyframes vtSlideIn {
+  from { opacity: 0; transform: translateY(16px); }
+}
+
+::view-transition-old(root) {
+  animation: 250ms ease-in both vtFadeOut;
+}
+
+::view-transition-new(root) {
+  animation: 350ms var(--ease-out) both vtSlideIn;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}
