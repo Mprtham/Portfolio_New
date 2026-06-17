@@ -278,9 +278,6 @@ const metrics = [
 
 <script>
   import gsap from 'gsap';
-  import { ScrollTrigger } from 'gsap/ScrollTrigger';
-
-  gsap.registerPlugin(ScrollTrigger);
 
   function runHero() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
@@ -295,17 +292,6 @@ const metrics = [
       duration: 0.65,
       ease: 'power3.out',
       delay: 0.15,
-    });
-
-    gsap.to('.hero-name', {
-      y: -80,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#home',
-        start: 'top top',
-        end: 'bottom top',
-        scrub: true,
-      },
     });
   }
 
