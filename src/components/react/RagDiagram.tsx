@@ -56,7 +56,7 @@ const NODES: Node[] = [
     label: 'Generate',
     sublabel: 'Azure OpenAI GPT-4o',
     detail: 'LLM receives [system prompt + reranked chunks + masked content + query]. Instructed to answer only from provided context and cite sources. Output guardrails check for hallucination signals.',
-    color: '#5CF2C0',
+    color: '#E8A44A',
     x: 400, y: 200,
   },
   {
@@ -64,7 +64,7 @@ const NODES: Node[] = [
     label: 'Cite + Track',
     sublabel: 'Langfuse + SQLite',
     detail: 'Every response includes citation markers. Langfuse traces the full pipeline: latency per step, token counts, cost per query. SQLite logs cost by role and query type for the admin dashboard.',
-    color: '#5CF2C0',
+    color: '#E8A44A',
     x: 220, y: 200,
   },
   {
@@ -119,7 +119,7 @@ export default function RagDiagram() {
               <line
                 key={`${from}-${to}`}
                 x1={x1} y1={y1} x2={x2} y2={y2}
-                stroke={isActive ? '#5CF2C0' : '#232A33'}
+                stroke={isActive ? '#E8A44A' : '#2A2018'}
                 strokeWidth={isActive ? 1.5 : 1}
                 markerEnd="url(#arrow)"
                 style={{ transition: 'stroke 200ms, stroke-width 200ms' }}
@@ -130,7 +130,7 @@ export default function RagDiagram() {
           {/* Arrow marker */}
           <defs>
             <marker id="arrow" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
-              <path d="M0,0 L0,6 L6,3 z" fill="#232A33" />
+              <path d="M0,0 L0,6 L6,3 z" fill="#2A2018" />
             </marker>
           </defs>
 
@@ -153,7 +153,7 @@ export default function RagDiagram() {
                   height={NH}
                   rx="2"
                   fill={isActive ? 'rgba(92,242,192,0.08)' : '#0F1318'}
-                  stroke={isActive ? node.color : '#232A33'}
+                  stroke={isActive ? node.color : '#2A2018'}
                   strokeWidth={isActive ? 1.5 : 1}
                   style={{ transition: 'all 200ms' }}
                 />

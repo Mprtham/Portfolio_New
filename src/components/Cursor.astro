@@ -1,77 +1,126 @@
 ---
 ---
-<canvas id="cursor-canvas" aria-hidden="true"></canvas>
+<div id="cursor" aria-hidden="true">
+  <div class="cursor-dot"></div>
+  <div class="cursor-ring"></div>
+</div>
 
 <style>
-  #cursor-canvas {
+  #cursor {
+    pointer-events: none;
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
+    z-index: 9999;
+  }
+
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--signal);
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
     pointer-events: none;
-    z-index: 9998;
+    will-change: transform;
+  }
+
+  .cursor-ring {
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid var(--signal);
+    border-radius: 50%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    will-change: transform;
+    opacity: 0.7;
+  }
+
+  .cursor-ring.hovering {
+    opacity: 1;
+  }
+
+  @media (hover: none), (max-width: 1024px) {
+    #cursor { display: none !important; }
   }
 </style>
 
 <script>
   let cursorRaf: number | null = null;
-  let cursorReady = false;
+  let cursorMouseHandler: ((e: MouseEvent) => void) | null = null;
+  let cursorOverHandler: ((e: MouseEvent) => void) | null = null;
+  let cursorOutHandler: ((e: MouseEvent) => void) | null = null;
 
   function initCursor() {
-    if (cursorReady) return;
-    if (window.matchMedia('(hover: none)').matches) return;
+    if (cursorRaf) cancelAnimationFrame(cursorRaf);
+    if (cursorMouseHandler) window.removeEventListener('mousemove', cursorMouseHandler);
+    if (cursorOverHandler) document.removeEventListener('mouseover', cursorOverHandler);
+    if (cursorOutHandler) document.removeEventListener('mouseout', cursorOutHandler);
 
-    cursorReady = true;
+    const hasHover = window.matchMedia('(hover: hover)').matches;
+    const isWide = window.innerWidth > 1024;
+    if (!hasHover || !isWide) return;
 
-    const canvas = document.getElementById('cursor-canvas') as HTMLCanvasElement;
-    if (!canvas) return;
+    const dot = document.querySelector('.cursor-dot') as HTMLElement;
+    const ring = document.querySelector('.cursor-ring') as HTMLElement;
+    if (!dot || !ring) return;
 
-    const ctx = canvas.getContext('2d')!;
-    let mouseX = -300, mouseY = -300;
-    let curX = -300, curY = -300;
+    let mouseX = -100, mouseY = -100;
+    let ringX = -100, ringY = -100;
+    let isHovering = false;
+    let ringScale = 1;
+    let targetScale = 1;
 
-    function resize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resize);
-    resize();
-
-    document.addEventListener('mousemove', (e) => {
+    cursorMouseHandler = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-    });
+      dot.style.transform = `translate(${mouseX - 3}px, ${mouseY - 3}px)`;
+    };
 
-    document.addEventListener('mouseleave', () => {
-      mouseX = -300;
-      mouseY = -300;
-    });
+    const hoverTargets = 'a, button, [data-hover]';
 
-    function tick() {
-      curX += (mouseX - curX) * 0.08;
-      curY += (mouseY - curY) * 0.08;
-
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      if (curX > -100) {
-        const g = ctx.createRadialGradient(curX, curY, 0, curX, curY, 140);
-        g.addColorStop(0, 'rgba(92, 242, 192, 0.12)');
-        g.addColorStop(0.4, 'rgba(92, 242, 192, 0.04)');
-        g.addColorStop(1, 'rgba(92, 242, 192, 0)');
-        ctx.fillStyle = g;
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+    cursorOverHandler = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest(hoverTargets)) {
+        isHovering = true;
+        targetScale = 2.2;
+        ring.classList.add('hovering');
       }
+    };
 
-      cursorRaf = requestAnimationFrame(tick);
+    cursorOutHandler = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest(hoverTargets)) {
+        isHovering = false;
+        targetScale = 1;
+        ring.classList.remove('hovering');
+      }
+    };
+
+    window.addEventListener('mousemove', cursorMouseHandler);
+    document.addEventListener('mouseover', cursorOverHandler);
+    document.addEventListener('mouseout', cursorOutHandler);
+
+    function loop() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ringScale += (targetScale - ringScale) * 0.15;
+
+      ring.style.transform = `translate(${ringX - 14}px, ${ringY - 14}px) scale(${ringScale.toFixed(3)})`;
+
+      cursorRaf = requestAnimationFrame(loop);
     }
 
-    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      tick();
-    }
+    loop();
   }
 
   initCursor();
   document.addEventListener('astro:page-load', initCursor);
+  document.addEventListener('astro:before-swap', () => {
+    if (cursorRaf) cancelAnimationFrame(cursorRaf);
+    if (cursorMouseHandler) window.removeEventListener('mousemove', cursorMouseHandler);
+    if (cursorOverHandler) document.removeEventListener('mouseover', cursorOverHandler);
+    if (cursorOutHandler) document.removeEventListener('mouseout', cursorOutHandler);
+  });
 </script>

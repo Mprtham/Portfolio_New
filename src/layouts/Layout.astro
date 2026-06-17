@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Nav from '../components/Nav.astro';
 import Cursor from '../components/Cursor.astro';
+import Loader from '../components/Loader.astro';
 import { ClientRouter } from 'astro:transitions';
 
 interface Props {
@@ -60,6 +61,7 @@ const ogImage = '/og.png';
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   </head>
   <body>
+    <Loader />
     <Nav />
     <slot />
     <Cursor />

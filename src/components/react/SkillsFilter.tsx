@@ -174,7 +174,7 @@ export default function SkillsFilter() {
         }
 
         .sf-chip-active {
-          background: rgba(92, 242, 192, 0.1);
+          background: rgba(232, 164, 74, 0.1);
           border-color: var(--signal);
           color: var(--signal);
         }

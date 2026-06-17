@@ -18,6 +18,14 @@
   let currentMouseHandler: ((e: MouseEvent) => void) | null = null;
   let currentResizeHandler: (() => void) | null = null;
 
+  const SPACING = 38;
+  const PUSH_RADIUS = 130;
+  const PUSH_STRENGTH = 5;
+  const FRICTION = 0.82;
+  const SPRING = 0.055;
+
+  type Dot = { baseX: number; baseY: number; x: number; y: number; vx: number; vy: number };
+
   function initDotGrid() {
     if (dotRaf) cancelAnimationFrame(dotRaf);
     if (currentMouseHandler) window.removeEventListener('mousemove', currentMouseHandler);
@@ -29,13 +37,11 @@
     const ctx = canvas.getContext('2d')!;
     const isTouch = window.matchMedia('(hover: none)').matches;
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const DOT_COUNT = 100;
-    const MAX_DIST = 150;
 
     let w = 0, h = 0;
-    let mouseX = -1000, mouseY = -1000;
-    let targetX = -1000, targetY = -1000;
-    let dots: { baseX: number; baseY: number; speedX: number; speedY: number; phase: number }[] = [];
+    let mouseX = -9999, mouseY = -9999;
+    let targetX = -9999, targetY = -9999;
+    let dots: Dot[] = [];
 
     function resize() {
       const parent = canvas.parentElement;
@@ -51,14 +57,16 @@
 
     function generateDots() {
       dots = [];
-      for (let i = 0; i < DOT_COUNT; i++) {
-        dots.push({
-          baseX: Math.random() * w,
-          baseY: Math.random() * h,
-          speedX: 0.4 + Math.random() * 0.6,
-          speedY: 0.3 + Math.random() * 0.5,
-          phase: Math.random() * Math.PI * 2,
-        });
+      const cols = Math.ceil(w / SPACING) + 1;
+      const rows = Math.ceil(h / SPACING) + 1;
+      const offsetX = (w - (cols - 1) * SPACING) / 2;
+      const offsetY = (h - (rows - 1) * SPACING) / 2;
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          const bx = offsetX + c * SPACING;
+          const by = offsetY + r * SPACING;
+          dots.push({ baseX: bx, baseY: by, x: bx, y: by, vx: 0, vy: 0 });
+        }
       }
     }
 
@@ -67,7 +75,6 @@
       targetX = e.clientX - rect.left;
       targetY = e.clientY - rect.top;
     };
-
     currentResizeHandler = resize;
 
     window.addEventListener('mousemove', currentMouseHandler);
@@ -78,42 +85,58 @@
       ctx.clearRect(0, 0, w, h);
       dots.forEach(dot => {
         ctx.beginPath();
-        ctx.arc(dot.baseX, dot.baseY, 2, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(92, 242, 192, 0.2)';
+        ctx.arc(dot.baseX, dot.baseY, 1.5, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(232, 164, 74, 0.18)';
         ctx.fill();
       });
       return;
     }
 
     function tick() {
-      mouseX += (targetX - mouseX) * 0.08;
-      mouseY += (targetY - mouseY) * 0.08;
+      mouseX += (targetX - mouseX) * 0.1;
+      mouseY += (targetY - mouseY) * 0.1;
 
       ctx.clearRect(0, 0, w, h);
 
-      const t = Date.now() * 0.001;
-
       dots.forEach(dot => {
-        const x = dot.baseX + Math.sin(t * dot.speedX + dot.phase) * 16;
-        const y = dot.baseY + Math.cos(t * dot.speedY + dot.phase) * 16;
-
-        const dx = mouseX - x;
-        const dy = mouseY - y;
+        const dx = dot.x - mouseX;
+        const dy = dot.y - mouseY;
         const dist = Math.sqrt(dx * dx + dy * dy);
 
-        let radius = 2;
-        let opacity = 0.25;
+        if (dist < PUSH_RADIUS && mouseX > -100) {
+          const t = 1 - dist / PUSH_RADIUS;
+          const force = t * t * PUSH_STRENGTH;
+          dot.vx += (dx / (dist || 1)) * force;
+          dot.vy += (dy / (dist || 1)) * force;
+        }
 
-        if (dist < MAX_DIST && mouseX > -100) {
-          const proximity = 1 - dist / MAX_DIST;
-          radius = 2 + 3 * proximity;
-          opacity = 0.25 + 0.3 * proximity;
+        dot.vx *= FRICTION;
+        dot.vy *= FRICTION;
+        dot.x += dot.vx;
+        dot.y += dot.vy;
+        dot.x += (dot.baseX - dot.x) * SPRING;
+        dot.y += (dot.baseY - dot.y) * SPRING;
+
+        const curDx = dot.x - mouseX;
+        const curDy = dot.y - mouseY;
+        const curDist = Math.sqrt(curDx * curDx + curDy * curDy);
+        const proximity = mouseX > -100 ? Math.max(0, 1 - curDist / PUSH_RADIUS) : 0;
+
+        const radius = 1.5 + proximity * 3.5;
+        const opacity = 0.18 + proximity * 0.65;
+
+        if (proximity > 0.05) {
+          ctx.shadowBlur = proximity * 22;
+          ctx.shadowColor = `rgba(232, 164, 74, ${proximity * 0.75})`;
+        } else {
+          ctx.shadowBlur = 0;
         }
 
         ctx.beginPath();
-        ctx.arc(x, y, radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(92, 242, 192, ${opacity})`;
+        ctx.arc(dot.x, dot.y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(232, 164, 74, ${opacity})`;
         ctx.fill();
+        ctx.shadowBlur = 0;
       });
 
       dotRaf = requestAnimationFrame(tick);

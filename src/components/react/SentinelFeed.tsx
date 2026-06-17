@@ -197,9 +197,9 @@ export default function SentinelFeed() {
         .sf-dot {
           width: 7px;
           height: 7px;
-          background: #5CF2C0;
+          background: #E8A44A;
           border-radius: 50%;
-          box-shadow: 0 0 6px #5CF2C0;
+          box-shadow: 0 0 6px #E8A44A;
           animation: blink 1.4s ease-in-out infinite;
           flex-shrink: 0;
         }
@@ -211,7 +211,7 @@ export default function SentinelFeed() {
 
         .sf-live-label {
           font-size: 0.68rem;
-          color: #5CF2C0;
+          color: #E8A44A;
           letter-spacing: 0.12em;
         }
 
@@ -290,7 +290,7 @@ export default function SentinelFeed() {
           font-size: 0.6rem;
           letter-spacing: 0.04em;
         }
-        .sf-badge-ok { background: rgba(92, 242, 192, 0.08); color: #5CF2C0; }
+        .sf-badge-ok { background: rgba(232, 164, 74, 0.08); color: #E8A44A; }
         .sf-badge-alert { background: rgba(251, 113, 133, 0.15); color: #FB7185; }
 
         .sf-metric { color: var(--text-mid); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }

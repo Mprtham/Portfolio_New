@@ -11,22 +11,22 @@
 
 :root {
   /* Base / surfaces */
-  --ink-900: #0A0C0F;
-  --ink-800: #0F1318;
-  --ink-700: #161B22;
-  --line: #232A33;
+  --ink-900: #0D0B08;
+  --ink-800: #151009;
+  --ink-700: #1E1610;
+  --line: #2A2018;
 
   /* Text */
-  --text-hi: #F4F6F8;
-  --text-mid: #B7C0CA;
-  --text-lo: #7C8794;
+  --text-hi: #F0EAD6;
+  --text-mid: #B8A99A;
+  --text-lo: #7A6E65;
 
   /* Signal accent */
-  --signal: #5CF2C0;
-  --signal-ink: #0A0C0F;
+  --signal: #E8A44A;
+  --signal-ink: #0D0B08;
 
   /* Data-viz categorical */
-  --viz-1: #5CF2C0;
+  --viz-1: #E8A44A;
   --viz-2: #38BDF8;
   --viz-3: #A78BFA;
   --viz-4: #FBBF24;
@@ -34,7 +34,7 @@
   --viz-6: #94A3B8;
 
   /* Semantic */
-  --up: #5CF2C0;
+  --up: #E8A44A;
   --down: #FB7185;
 
   /* Spacing (8pt scale) */
@@ -65,6 +65,10 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+@media (hover: hover) and (min-width: 1025px) {
+  *, *::before, *::after { cursor: none !important; }
 }
 
 html {
