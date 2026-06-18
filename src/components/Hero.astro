@@ -27,7 +27,7 @@ const metrics = [
     <h1 class="hero-name" aria-label="Prathamesh Mishra">
       {heroLine1.split('').map(c => <span class="hero-char">{c}</span>)}
       <br />
-      {heroLine2.split('').map(c => <span class="hero-char">{c}</span>)}
+      {heroLine2.split('').map(c => <span class="hero-char hero-char-outline">{c}</span>)}
     </h1>
 
     <p class="hero-thesis hero-animate" style="--delay: 160ms">
@@ -137,7 +137,8 @@ const metrics = [
   }
 
   .hero-eyebrow {
-    font-size: var(--step--1);
+    font-size: 0.78rem;
+    letter-spacing: 0.1em;
     color: var(--text-lo);
     margin-bottom: 24px;
     display: flex;
@@ -279,6 +280,34 @@ const metrics = [
 
   .hero-char {
     display: inline-block;
+    transition: color 250ms ease, text-shadow 250ms ease;
+    cursor: default;
+  }
+
+  .hero-char:hover {
+    color: #e8a44a;
+    text-shadow: 0 0 18px rgba(232, 164, 74, 0.55);
+  }
+
+  .hero-char-outline {
+    color: #9a8a78;
+  }
+
+  @supports (-webkit-text-stroke: 1px transparent) {
+    .hero-char-outline {
+      color: transparent;
+      -webkit-text-stroke: 1px #9a8a78;
+    }
+
+    .hero-char-outline:hover {
+      -webkit-text-stroke-color: #e8a44a;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-char {
+      transition: none;
+    }
   }
 </style>
 
