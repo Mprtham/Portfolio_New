@@ -115,6 +115,7 @@ const ogImage = '/og.png';
         if (lenis) lenis.destroy();
         if (lenisRaf) cancelAnimationFrame(lenisRaf);
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        if (window.matchMedia('(hover: none)').matches) return;
 
         lenis = new Lenis({
           duration: 1.2,

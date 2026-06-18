@@ -309,6 +309,26 @@ const metrics = [
       transition: none;
     }
   }
+
+  /* ── Mobile-only: ambient breathe on tagline ── */
+  @keyframes hero-thesis-breathe {
+    0%, 100% { opacity: 1; }
+    50%       { opacity: 0.68; }
+  }
+
+  @media (hover: none) and (prefers-reduced-motion: no-preference) {
+    .hero-thesis.hero-animate {
+      animation:
+        heroFadeUp 600ms var(--ease-out) 160ms forwards,
+        hero-thesis-breathe 3.5s ease-in-out 2s infinite;
+    }
+  }
+
+  /* ── Mobile-only: tap feedback on CTAs ── */
+  @media (hover: none) {
+    .btn-primary:active  { transform: scale(0.96); opacity: 0.82; }
+    .btn-secondary:active { transform: scale(0.96); opacity: 0.82; }
+  }
 </style>
 
 <script>

@@ -198,6 +198,14 @@ section {
   box-shadow: 0 8px 32px rgba(232, 164, 74, 0.12), 0 0 0 1px rgba(232, 164, 74, 0.15);
 }
 
+@media (hover: none) {
+  .card:active {
+    transform: scale(0.98);
+    border-color: rgba(232, 164, 74, 0.35);
+    transition: transform 80ms ease, border-color 80ms ease;
+  }
+}
+
 /* Chip */
 .chip {
   display: inline-flex;
