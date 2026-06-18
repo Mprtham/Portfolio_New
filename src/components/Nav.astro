@@ -227,11 +227,13 @@ const links = [
 
     if (!sections.length) return;
 
+    const isSmall = window.innerWidth < 768;
+    const spyMargin = isSmall ? '-10% 0px -55% 0px' : '-15% 0px -70% 0px';
     spyObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) setActive(entry.target.id);
       });
-    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+    }, { rootMargin: spyMargin, threshold: 0 });
 
     sections.forEach(s => spyObserver!.observe(s));
   }

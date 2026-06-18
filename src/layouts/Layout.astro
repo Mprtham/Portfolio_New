@@ -95,7 +95,7 @@ const ogImage = '/og.png';
               revealObserver!.unobserve(entry.target);
             }
           });
-        }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+        }, { threshold: 0.08, rootMargin: '0px 0px -20px 0px' });
 
         reveals.forEach(el => revealObserver!.observe(el));
       }
@@ -115,11 +115,12 @@ const ogImage = '/og.png';
         if (lenis) lenis.destroy();
         if (lenisRaf) cancelAnimationFrame(lenisRaf);
         if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-        if (window.matchMedia('(hover: none)').matches) return;
 
         lenis = new Lenis({
           duration: 1.2,
           easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+          syncTouch: true,
+          touchMultiplier: 1.5,
         });
 
         function raf(time: number) {

@@ -90,13 +90,46 @@
     window.addEventListener('resize', currentResizeHandler);
     resize();
 
-    if (isTouch || reduced) {
+    if (reduced) {
       ctx.clearRect(0, 0, w, h);
       dots.forEach(dot => {
         ctx.beginPath();
         ctx.arc(dot.baseX, dot.baseY, 1.5, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(232, 164, 74, 0.18)';
         ctx.fill();
+      });
+      return;
+    }
+
+    if (isTouch) {
+      let lastFrame = 0;
+      const touchTick = (ts: number) => {
+        if (document.hidden) { dotRaf = null; return; }
+        if (ts - lastFrame < 48) { dotRaf = requestAnimationFrame(touchTick); return; }
+        lastFrame = ts;
+        ctx.clearRect(0, 0, w, h);
+        dots.forEach((dot, i) => {
+          const opacity = 0.12 + 0.07 * Math.sin(ts / 3200 + i * 0.7);
+          ctx.beginPath();
+          ctx.arc(dot.baseX, dot.baseY, 1.5, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(232, 164, 74, ${opacity})`;
+          ctx.fill();
+        });
+        dotRaf = requestAnimationFrame(touchTick);
+      };
+
+      visibilityHandler = () => { if (!document.hidden && !dotRaf) touchTick(performance.now()); };
+      document.addEventListener('visibilitychange', visibilityHandler);
+      touchTick(performance.now());
+
+      dotObserverRaf = requestAnimationFrame(() => {
+        dotObserverRaf = null;
+        dotObserver = new IntersectionObserver((entries) => {
+          heroVisible = entries[0].isIntersecting;
+          if (!heroVisible && dotRaf) { cancelAnimationFrame(dotRaf); dotRaf = null; }
+          else if (heroVisible && !dotRaf && !document.hidden) touchTick(performance.now());
+        }, { threshold: 0 });
+        dotObserver.observe(canvas);
       });
       return;
     }
