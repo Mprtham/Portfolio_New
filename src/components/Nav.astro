@@ -13,8 +13,17 @@ const links = [
 
 <nav class="nav" id="nav" aria-label="Main navigation">
   <div class="nav-inner container">
-    <a href="#home" class="nav-logo" aria-label="Back to top">
-      <span class="logo-mark">PM</span>
+    <a href="/" class="nav-logo" aria-label="Prathamesh — home">
+      <svg width="36" height="40" viewBox="0 0 76 110" xmlns="http://www.w3.org/2000/svg"
+           class="nav-monogram" role="img" aria-label="Prathamesh — home" focusable="false">
+        <g fill="#e8a44a">
+          <circle cx="20" cy="20" r="4"/><circle cx="36" cy="20" r="4"/><circle cx="52" cy="20" r="4"/>
+          <circle cx="20" cy="38" r="4"/><circle cx="56" cy="38" r="4"/>
+          <circle cx="20" cy="56" r="4"/><circle cx="36" cy="56" r="4"/><circle cx="52" cy="56" r="4"/>
+          <circle cx="20" cy="74" r="4"/>
+          <circle cx="20" cy="90" r="4"/>
+        </g>
+      </svg>
     </a>
 
     <ul class="nav-links" role="list">
@@ -62,22 +71,18 @@ const links = [
     text-decoration: none;
   }
 
-  .logo-mark {
-    font-family: 'Poppins', system-ui, sans-serif;
-    font-weight: 700;
-    font-size: 1rem;
-    letter-spacing: 0.06em;
-    color: var(--signal);
-    border: 1.5px solid rgba(232, 164, 74, 0.4);
-    border-radius: 4px;
-    padding: 2px 8px;
-    line-height: 1.4;
-    transition: border-color 200ms, box-shadow 200ms;
+  .nav-monogram {
+    display: block;
+    opacity: 0.82;
+    transition: opacity 200ms;
   }
 
-  .nav-logo:hover .logo-mark {
-    border-color: var(--signal);
-    box-shadow: 0 0 10px rgba(232, 164, 74, 0.2);
+  .nav-logo:hover .nav-monogram {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-monogram { transition: none; }
   }
 
   .nav-links {
@@ -98,9 +103,19 @@ const links = [
     white-space: nowrap;
   }
 
-  .nav-link:hover {
+  .nav-link:hover,
+  .nav-link.active {
     color: var(--text-hi);
     background: var(--ink-700);
+  }
+
+  .nav-link.active {
+    color: var(--signal);
+    background: rgba(232, 164, 74, 0.08);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link { transition: none; }
   }
 
   .nav-cta {
@@ -188,6 +203,43 @@ const links = [
     });
   }
 
+  let spyObserver: IntersectionObserver | null = null;
+
+  function initScrollSpy() {
+    if (spyObserver) { spyObserver.disconnect(); spyObserver = null; }
+
+    const navLinks = document.querySelectorAll<HTMLAnchorElement>('.nav-link');
+
+    function setActive(id: string) {
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href') || '';
+        link.classList.toggle('active', href === `#${id}`);
+      });
+    }
+
+    const sectionIds = Array.from(navLinks)
+      .map(l => (l.getAttribute('href') || '').replace('#', ''))
+      .filter(Boolean);
+
+    const sections = sectionIds
+      .map(id => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (!sections.length) return;
+
+    spyObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) setActive(entry.target.id);
+      });
+    }, { rootMargin: '-15% 0px -70% 0px', threshold: 0 });
+
+    sections.forEach(s => spyObserver!.observe(s));
+  }
+
   initNav();
-  document.addEventListener('astro:page-load', initNav);
+  initScrollSpy();
+  document.addEventListener('astro:page-load', () => { initNav(); initScrollSpy(); });
+  document.addEventListener('astro:before-swap', () => {
+    if (spyObserver) { spyObserver.disconnect(); spyObserver = null; }
+  });
 </script>
