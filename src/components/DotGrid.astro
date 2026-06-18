@@ -15,6 +15,7 @@
 
 <script>
   let dotRaf: number | null = null;
+  let dotObserverRaf: number | null = null;
   let currentMouseHandler: ((e: MouseEvent) => void) | null = null;
   let currentResizeHandler: (() => void) | null = null;
   let visibilityHandler: (() => void) | null = null;
@@ -31,6 +32,7 @@
 
   function initDotGrid() {
     if (dotRaf) cancelAnimationFrame(dotRaf);
+    if (dotObserverRaf) { cancelAnimationFrame(dotObserverRaf); dotObserverRaf = null; }
     if (currentMouseHandler) window.removeEventListener('mousemove', currentMouseHandler);
     if (currentResizeHandler) window.removeEventListener('resize', currentResizeHandler);
     if (visibilityHandler) document.removeEventListener('visibilitychange', visibilityHandler);
@@ -100,7 +102,8 @@
     }
 
     function tick() {
-      if (document.hidden || !heroVisible) { dotRaf = null; return; }
+      // Only guard on tab visibility — heroVisible is managed externally by IO
+      if (document.hidden) { dotRaf = null; return; }
 
       mouseX += (targetX - mouseX) * 0.1;
       mouseY += (targetY - mouseY) * 0.1;
@@ -143,23 +146,29 @@
       dotRaf = requestAnimationFrame(tick);
     }
 
-    visibilityHandler = () => { if (!document.hidden && heroVisible && !dotRaf) tick(); };
+    visibilityHandler = () => { if (!document.hidden && !dotRaf) tick(); };
     document.addEventListener('visibilitychange', visibilityHandler);
 
-    dotObserver = new IntersectionObserver((entries) => {
-      heroVisible = entries[0].isIntersecting;
-      if (heroVisible && !dotRaf) tick();
-      else if (!heroVisible && dotRaf) { cancelAnimationFrame(dotRaf); dotRaf = null; }
-    }, { threshold: 0 });
-    dotObserver.observe(canvas);
+    tick(); // start immediately — don't wait for IO
 
-    tick();
+    // Delay IO setup by one frame so layout is settled before the first intersection check.
+    // Prevents a false-negative isIntersecting=false from killing the loop on initial load.
+    dotObserverRaf = requestAnimationFrame(() => {
+      dotObserverRaf = null;
+      dotObserver = new IntersectionObserver((entries) => {
+        heroVisible = entries[0].isIntersecting;
+        if (!heroVisible && dotRaf) { cancelAnimationFrame(dotRaf); dotRaf = null; }
+        else if (heroVisible && !dotRaf && !document.hidden) tick();
+      }, { threshold: 0 });
+      dotObserver.observe(canvas);
+    });
   }
 
   initDotGrid();
   document.addEventListener('astro:page-load', initDotGrid);
   document.addEventListener('astro:before-swap', () => {
     if (dotRaf) cancelAnimationFrame(dotRaf);
+    if (dotObserverRaf) { cancelAnimationFrame(dotObserverRaf); dotObserverRaf = null; }
     if (currentMouseHandler) window.removeEventListener('mousemove', currentMouseHandler);
     if (currentResizeHandler) window.removeEventListener('resize', currentResizeHandler);
     if (visibilityHandler) document.removeEventListener('visibilitychange', visibilityHandler);
