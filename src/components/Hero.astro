@@ -291,6 +291,7 @@ const metrics = [
     const chars = document.querySelectorAll<HTMLElement>('.hero-char');
     if (!chars.length) return;
 
+    gsap.killTweensOf(chars);
     gsap.from(chars, {
       opacity: 0,
       y: 36,
@@ -298,10 +299,10 @@ const metrics = [
       duration: 0.65,
       ease: 'power3.out',
       delay: 0.15,
+      clearProps: 'all',
     });
   }
 
-  runHero();
   document.addEventListener('astro:page-load', runHero);
 </script>
 
