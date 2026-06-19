@@ -4,6 +4,7 @@ interface Project {
   title: string;
   subtitle: string;
   description: string;
+  plainLine: string;
   stack: string[];
   outcome: string;
   links: { label: string; href: string; external?: boolean }[];
@@ -18,6 +19,7 @@ const projects: Project[] = [
     title: 'Charac — Pharmacy Analytics',
     subtitle: 'Data Analyst · Sep 2025 – Present',
     description: 'Turned Charac\'s operational data into reporting pharmacy teams and the growth side could actually use — Power BI over prescriptions, deliveries and consultations; GA4 event tracking on the patient app. All work scoped to aggregated, pseudonymised data under NHS IG.',
+    plainLine: 'I build the dashboards and analysis that help an NHS pharmacy-tech platform grow and run better.',
     stack: ['Power BI', 'DAX', 'GA4', 'BigQuery', 'SQL', 'ETL/ELT', 'NHS IG'],
     outcome: 'Live reporting layer across Greater London — 100+ pharmacies on the platform',
     links: [
@@ -33,6 +35,7 @@ const projects: Project[] = [
     title: 'Sentinel: Real-Time Anomaly Detection Agent',
     subtitle: 'Production AI Systems',
     description: 'Ingests 100+ events/sec, flags statistical anomalies, and writes AI root-cause reports in <90s. Four-node LangGraph agent with <10% false-positive rate.',
+    plainLine: 'Watches live data and instantly flags problems, then writes a plain explanation of what went wrong.',
     stack: ['LangGraph', 'Groq', 'DuckDB', 'Kafka', 'FastAPI', 'WebSocket', 'Docker'],
     outcome: '<10% false positive rate · <90s root-cause report',
     links: [
@@ -46,6 +49,7 @@ const projects: Project[] = [
     title: 'Agentic Data Analyst',
     subtitle: 'Production AI Systems',
     description: 'An autonomous analyst that runs end-to-end analysis on tabular data: ReAct loop over a registry of statistical tests, sandboxed Python execution, auto-generated reports.',
+    plainLine: 'An AI analyst that automatically reads a dataset, runs the right tests, and writes a full report — no human in the loop.',
     stack: ['ReAct', 'Claude Sonnet', 'FastAPI', 'Polars', 'Plotly', 'ChromaDB', 'Docker'],
     outcome: 'Full end-to-end analysis in under 60s · sandboxed execution',
     links: [
@@ -59,6 +63,7 @@ const projects: Project[] = [
     title: 'Coder Buddy: Multi-Agent AI Engineer',
     subtitle: 'Production AI Systems',
     description: 'Planner → Architect → Coder pipeline (LangGraph) that turns a prompt into a modular codebase with a streaming React UI.',
+    plainLine: 'Describe what you want to build; an AI team of planner, architect, and coder writes the full codebase for you.',
     stack: ['LangGraph', 'FastAPI', 'React', 'Vite', 'Tailwind', 'Groq'],
     outcome: 'Full codebase from a single prompt · streaming output',
     links: [
@@ -71,6 +76,7 @@ const projects: Project[] = [
     title: 'PeopleOps Analytics: HR Attrition & Retention Platform',
     subtitle: 'Data Engineering & ML',
     description: 'End-to-end HR analytics on BigQuery + dbt + Power BI. Predicts who\'s at risk of leaving before they decide to. Leakage-proof point-in-time model, ROC-AUC 0.665, Precision@top-10% 55.1%, 3× PR-AUC over baseline. 75/75 dbt tests, Power BI engineered like code (PBIP in Git, BPA in CI).',
+    plainLine: 'An AI system that spots which employees might quit before they do, so HR can act early — and checks for unfair pay gaps.',
     stack: ['BigQuery', 'dbt', 'Power BI', 'PBIP', 'FastAPI', 'scikit-learn', 'SHAP', 'GitHub Actions'],
     outcome: 'ROC-AUC 0.665 · 3× PR-AUC baseline · 75/75 dbt tests',
     links: [
@@ -85,6 +91,7 @@ const projects: Project[] = [
     title: 'SQL Forge: BigQuery + dbt Text-to-SQL Fine-Tuner',
     subtitle: 'Data Engineering & ML',
     description: 'Fine-tuned Phi-3-mini for BigQuery-dialect + dbt SQL. 15% → 55% exact-match accuracy, 60% → 90% parse accuracy. Model + datasets published to HuggingFace.',
+    plainLine: 'Trained an AI to write accurate database queries — success rate went from 15% to 55%.',
     stack: ['Phi-3', 'Unsloth', 'LoRA', 'TRL DPO', 'BigQuery', 'dbt', 'FastAPI', 'Streamlit'],
     outcome: '15% → 55% exact-match accuracy · published to HuggingFace',
     links: [
@@ -97,6 +104,7 @@ const projects: Project[] = [
     title: 'RAG Observatory: Production RAG with Full Observability',
     subtitle: 'Trustworthy AI',
     description: 'Cross-encoder reranking + citation enforcement + Langfuse tracing (latency, $/query, tokens) + RAGAS CI quality gates. The 70% of AI portfolios skip.',
+    plainLine: 'An AI Q&A system with built-in quality controls: it cites its sources and logs every cost and response time.',
     stack: ['FastAPI', 'ChromaDB', 'Groq', 'Langfuse', 'RAGAS', 'GitHub Actions', 'Docker'],
     outcome: 'Full latency/cost tracing · RAGAS CI gates · citation enforcement',
     links: [
@@ -109,6 +117,7 @@ const projects: Project[] = [
     title: 'SecureQuery AI: Secure RAG with RBAC',
     subtitle: 'Trustworthy AI',
     description: 'Defence-in-depth role-based access (Finance/HR/C-level), PII masking, JWT, guardrails, cost tracking. 185 tests passing in ~2s.',
+    plainLine: 'An AI assistant that only shows each person the information they\'re allowed to see.',
     stack: ['FastAPI', 'Qdrant', 'Azure OpenAI', 'Streamlit', 'JWT', 'Docker'],
     outcome: '185 tests in ~2s · Finance/HR/C-level RBAC · PII masking',
     links: [
@@ -122,6 +131,7 @@ const projects: Project[] = [
     title: 'Stock Price Prediction with Sentiment Analysis',
     subtitle: 'Data Engineering & ML · MSc Dissertation',
     description: 'Hybrid LSTM + Prophet with NLP sentiment analysis over 80k+ tweets across 25 companies. Sharpe ratio 0.719.',
+    plainLine: 'Predicted stock prices by combining historical price data with the mood of millions of tweets.',
     stack: ['LSTM', 'Prophet', 'NLP', 'yfinance', 'Python', 'pandas'],
     outcome: 'Sharpe ratio 0.719 · 80k+ tweets · 25 companies',
     links: [
@@ -153,6 +163,7 @@ const themeLabels: Record<string, string> = {
           <div class="flagship-left">
             <div class="flagship-badge mono">★ Flagship / Commercial Client Work</div>
             <h3 class="flagship-title">{p.title}</h3>
+            <p class="flagship-plain">{p.plainLine}</p>
             <p class="flagship-desc">{p.description}</p>
             <div class="card-stack">
               {p.stack.map(s => <span class="chip">{s}</span>)}
@@ -193,6 +204,7 @@ const themeLabels: Record<string, string> = {
               <div class="card-preview" data-theme={p.theme} aria-hidden="true"></div>
               <div class="pc-top">
                 <h3 class="pc-title">{p.title}</h3>
+                <p class="pc-plain">{p.plainLine}</p>
                 <p class="pc-desc">{p.description}</p>
               </div>
               <div class="pc-outcome">
@@ -243,7 +255,7 @@ const themeLabels: Record<string, string> = {
     pointer-events: none;
   }
   .card:hover .card-preview { transform: scaleY(1); }
-  .card-preview[data-theme="flagship"] { background: rgba(232, 164, 74, 0.06); }
+  .card-preview[data-theme="flagship"] { background: rgba(163, 230, 53, 0.06); }
   .card-preview[data-theme="ai"]        { background: rgba(167, 139, 250, 0.06); }
   .card-preview[data-theme="data"]      { background: rgba(56, 189, 248, 0.06); }
   .card-preview[data-theme="trustworthy"] { background: rgba(251, 113, 133, 0.06); }
@@ -288,6 +300,16 @@ const themeLabels: Record<string, string> = {
   .flagship-title {
     font-size: var(--step-2);
     margin-bottom: 16px;
+  }
+
+  .flagship-plain {
+    font-size: 0.88rem;
+    color: var(--text-mid);
+    font-style: italic;
+    margin-bottom: 12px;
+    margin-top: -8px;
+    padding-left: 10px;
+    border-left: 2px solid var(--signal);
   }
 
   .flagship-desc {
@@ -356,6 +378,15 @@ const themeLabels: Record<string, string> = {
   .pc-title {
     font-size: var(--step-1);
     color: var(--text-hi);
+  }
+
+  .pc-plain {
+    font-size: 0.79rem;
+    color: var(--text-mid);
+    font-style: italic;
+    line-height: 1.4;
+    padding-left: 8px;
+    border-left: 2px solid var(--signal);
   }
 
   .pc-desc {

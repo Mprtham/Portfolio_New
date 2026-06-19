@@ -1,11 +1,26 @@
 ---
-const roles = [
+interface MetricContext { value: string; plain: string; }
+interface Role {
+  title: string;
+  company: string;
+  period: string;
+  description: string;
+  highlights: string[];
+  plainLine: string;
+  metricContexts?: MetricContext[];
+}
+
+const roles: Role[] = [
   {
     title: 'Data Analyst',
     company: 'Pharmaceuticals Direct Limited',
     period: 'Sep 2025 – Present',
-    description: 'Built the full analytics loop: SQL segmentation pipelines, A/B testing framework, and Power BI executive dashboards driving +30% organic acquisition and −22% CAC inside 4 months. Managed GDPR-compliant data flows and ±8% demand-forecast models informing £200K+ revenue targeting.',
-    highlights: ['+30% acquisition', '−22% CAC', '±8% forecast'],
+    description: 'Built the full analytics loop: SQL segmentation pipelines, A/B testing framework, and Power BI executive dashboards driving +30% organic acquisition and −22% CAC inside 4 months. Managed GDPR-compliant data flows and ±8% demand-forecast models informing £200K+ revenue targeting. Automated reporting pipelines reduced manual effort by 45%.',
+    highlights: ['+30% acquisition', '−22% CAC', '±8% forecast', '−45% reporting effort'],
+    plainLine: 'I build the dashboards and analysis that help an NHS pharmacy-tech platform grow and run better.',
+    metricContexts: [
+      { value: '−45%', plain: 'Automated repetitive reporting, cutting manual work nearly in half.' },
+    ],
   },
   {
     title: 'Data Scientist',
@@ -13,13 +28,18 @@ const roles = [
     period: 'Aug 2024 – Sep 2025',
     description: 'Ran 20+ end-to-end A/B experiments feeding directly into the product roadmap. Modelled 1M+ user behavioural records for churn reduction. Built Python/SQL pipelines turning raw event data into stakeholder-ready insights within 2-day SLAs.',
     highlights: ['20+ A/B tests', '1M+ records', '2-day SLA'],
+    plainLine: 'I cleaned and modelled financial data and ran experiments to improve an automated trading system.',
   },
   {
     title: 'Operations Analyst (Contract)',
     company: 'Hampton by Hilton',
     period: 'Dec 2024 – Aug 2025',
-    description: 'Cohort analysis on 12 months of booking data identified key retention levers, driving +9% repeat bookings. Built automated reporting pipelines that cut weekly manual effort by 50%.',
-    highlights: ['+9% repeat bookings', '−50% reporting time'],
+    description: 'Cohort analysis on 12 months of booking data identified key retention levers, driving +9% repeat bookings. Built automated reporting pipelines that cut weekly manual effort by 40%.',
+    highlights: ['+9% repeat bookings', '−40% reporting time'],
+    plainLine: 'I used data to cut waste, speed up deliveries and save the hotel money.',
+    metricContexts: [
+      { value: '−40%', plain: 'Automated reporting, cutting the weekly manual effort by 40%.' },
+    ],
   },
   {
     title: 'Python Developer',
@@ -27,13 +47,18 @@ const roles = [
     period: 'Dec 2022 – Jul 2023',
     description: 'Developed automation scripts and data processing pipelines in Python. Worked across ETL workflows and internal tooling, building the engineering foundation that underpins later ML and analytics work.',
     highlights: ['Python pipelines', 'ETL automation'],
+    plainLine: 'I built the software and automation behind payment and insurance web products.',
   },
   {
     title: 'Data Science & Business Analytics Intern',
     company: 'Zotech AI Technologies',
     period: 'Jun 2022 – Dec 2022',
-    description: 'First industry exposure to end-to-end data science workflow: from data collection through modelling to business reporting. Delivered predictive models for internal use cases and began building the Python/SQL toolkit.',
-    highlights: ['ML models', 'SQL reporting'],
+    description: 'First industry exposure to end-to-end data science workflow: from data collection through modelling to business reporting. Delivered predictive models for internal use cases, automated internal reporting pipelines reducing manual effort by 50%, and began building the Python/SQL toolkit.',
+    highlights: ['ML models', 'SQL reporting', '−50% reporting effort'],
+    plainLine: 'I built dashboards and AI models that helped business teams make faster decisions.',
+    metricContexts: [
+      { value: '−50%', plain: 'Automated internal reporting, cutting the team\'s manual effort in half.' },
+    ],
   },
 ];
 ---
@@ -69,6 +94,17 @@ const roles = [
               </div>
             </div>
             <p class="tl-desc">{role.description}</p>
+            <p class="tl-plain">{role.plainLine}</p>
+            {role.metricContexts && (
+              <div class="tl-metric-contexts">
+                {role.metricContexts.map(mc => (
+                  <div class="tl-metric-context">
+                    <span class="mono tl-mc-value">{mc.value}</span>
+                    <span class="tl-mc-plain">{mc.plain}</span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       ))}
@@ -111,7 +147,7 @@ const roles = [
     background: var(--signal);
     border-radius: 50%;
     flex-shrink: 0;
-    box-shadow: 0 0 8px rgba(232, 164, 74, 0.4);
+    box-shadow: 0 0 8px rgba(163, 230, 53, 0.4);
   }
 
   .tl-line {
@@ -129,7 +165,7 @@ const roles = [
   }
 
   .timeline-item:hover .tl-dot {
-    box-shadow: 0 0 16px rgba(232, 164, 74, 0.9), 0 0 32px rgba(232, 164, 74, 0.4);
+    box-shadow: 0 0 16px rgba(163, 230, 53, 0.9), 0 0 32px rgba(163, 230, 53, 0.4);
     transform: scale(1.3);
     transition: box-shadow 250ms, transform 250ms;
   }
@@ -183,8 +219,8 @@ const roles = [
   .hl-chip {
     font-size: 0.7rem;
     padding: 3px 8px;
-    background: rgba(232, 164, 74, 0.08);
-    border: 1px solid rgba(232, 164, 74, 0.25);
+    background: rgba(163, 230, 53, 0.08);
+    border: 1px solid rgba(163, 230, 53, 0.25);
     border-radius: 2px;
     color: var(--signal);
     white-space: nowrap;
@@ -194,6 +230,43 @@ const roles = [
     font-size: 0.88rem;
     color: var(--text-mid);
     line-height: 1.7;
+  }
+
+  .tl-plain {
+    font-size: 0.82rem;
+    color: var(--text-mid);
+    font-style: italic;
+    line-height: 1.5;
+    margin-top: 10px;
+    padding-left: 10px;
+    border-left: 2px solid var(--signal);
+  }
+
+  .tl-metric-contexts {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-top: 8px;
+  }
+
+  .tl-metric-context {
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+
+  .tl-mc-value {
+    font-size: 0.7rem;
+    color: var(--signal);
+    flex-shrink: 0;
+    min-width: 36px;
+  }
+
+  .tl-mc-plain {
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    font-style: italic;
+    line-height: 1.4;
   }
 
   @media (max-width: 600px) {

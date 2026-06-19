@@ -1,14 +1,14 @@
 ---
 const metrics = [
-  { value: '+30%', label: 'organic acquisition', context: '~12k → 15.6k monthly sign-ups in 4 months via segmentation + A/B testing', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
-  { value: '−22%', label: 'CAC reduction', context: 'Customer acquisition cost reduced within the same acquisition programme', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
-  { value: '±8%', label: 'forecast accuracy', context: 'SQL predictive models informing ~£200K revenue targeting', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
-  { value: '+12%', label: 'retention', context: 'Cohort + RFM segmentation on 50k+ MAU driving repeat engagement', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
-  { value: '2wk → 2day', label: 'reporting cycle', context: 'Automated SQL/Python pipelines compressed fortnightly reporting to 48-hour delivery', where: 'Pharmaceuticals Direct Limited', dir: 'up' },
-  { value: '20+', label: 'experiments shipped', context: 'End-to-end A/B analysis feeding directly into product roadmap', where: 'Small Cap Network', dir: 'neutral' },
-  { value: '1M+', label: 'records modelled', context: 'Behavioural insight pipeline driving churn reduction initiatives', where: 'Small Cap Network', dir: 'neutral' },
-  { value: '+9%', label: 'repeat bookings', context: 'Cohort analysis on 12 months of booking data revealing retention levers', where: 'Hampton by Hilton', dir: 'up' },
-  { value: '£1.3M', label: 'revenue contribution', context: 'Total verified revenue impact across all client engagements', where: 'Cross-engagement', dir: 'up' },
+  { value: '+30%', label: 'organic acquisition', context: '~12k → 15.6k monthly sign-ups in 4 months via segmentation + A/B testing', where: 'Pharmaceuticals Direct Limited', dir: 'up', plainLine: '30% more customers found the business through search, without paid ads — tracked in Google Analytics.' },
+  { value: '−22%', label: 'CAC reduction', context: 'Customer acquisition cost reduced within the same acquisition programme', where: 'Pharmaceuticals Direct Limited', dir: 'up', plainLine: 'Cut the cost of gaining each new customer by 22% on the same budget.' },
+  { value: '±8%', label: 'forecast accuracy', context: 'SQL predictive models informing ~£200K revenue targeting', where: 'Pharmaceuticals Direct Limited', dir: 'up', plainLine: 'My forecasting models predicted demand to within 8% — accurate enough to plan stock and revenue.' },
+  { value: '+12%', label: 'retention', context: 'Cohort + RFM segmentation on 50k+ MAU driving repeat engagement', where: 'Pharmaceuticals Direct Limited', dir: 'up', plainLine: '12% more customers came back for repeat business, after personalised segmentation targeting.' },
+  { value: '2wk → 2day', label: 'reporting cycle', context: 'Automated SQL/Python pipelines compressed fortnightly reporting to 48-hour delivery', where: 'Pharmaceuticals Direct Limited', dir: 'up', plainLine: 'Reporting that took two weeks now takes two days, after I automated it.' },
+  { value: '20+', label: 'experiments shipped', context: 'End-to-end A/B analysis feeding directly into product roadmap', where: 'Small Cap Network', dir: 'neutral', plainLine: 'Ran 20+ controlled experiments to prove what actually improves results before rolling it out.' },
+  { value: '1M+', label: 'records modelled', context: 'Behavioural insight pipeline driving churn reduction initiatives', where: 'Small Cap Network', dir: 'neutral', plainLine: 'Built prediction models on over a million data records.' },
+  { value: '+9%', label: 'repeat bookings', context: 'Cohort analysis on 12 months of booking data revealing retention levers', where: 'Hampton by Hilton', dir: 'up', plainLine: '9% more hotel guests rebooked after analysis revealed what most influenced their loyalty.' },
+  { value: '£1.3M', label: 'revenue contribution', context: 'Total verified revenue impact across all client engagements', where: 'Cross-engagement', dir: 'up', plainLine: 'My analysis of drug-portfolio data guided decisions that added about £1.3M in revenue.' },
 ];
 ---
 
@@ -32,6 +32,7 @@ const metrics = [
             <span class="mc-label">{m.label}</span>
           </div>
           <p class="mc-context">{m.context}</p>
+          <p class="mc-plain">{m.plainLine}</p>
           <div class="mc-where">
             <span class="dot-sm"></span>
             <span class="mono" style="font-size: 0.72rem; color: var(--text-lo);">{m.where}</span>
@@ -119,6 +120,16 @@ const metrics = [
     color: var(--text-mid);
     line-height: 1.5;
     flex: 1;
+  }
+
+  .mc-plain {
+    font-size: 0.74rem;
+    color: var(--text-mid);
+    font-style: italic;
+    line-height: 1.45;
+    padding-top: 8px;
+    border-top: 1px solid var(--line);
+    margin-top: 4px;
   }
 
   .mc-where {

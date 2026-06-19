@@ -61,33 +61,17 @@ import Layout from '../layouts/Layout.astro';
             <div class="cv-role-header">
               <div>
                 <h3 class="cv-role-title">Data Analyst</h3>
-                <span class="cv-company">Pharmaceutical UK Ltd</span>
+                <span class="cv-company">Pharmaceuticals Direct Limited</span>
               </div>
-              <span class="mono cv-period">Jan 2025 – Present</span>
+              <span class="mono cv-period">Sep 2025 – Present</span>
             </div>
             <ul class="cv-bullets">
+              <li>Built Power BI + GA4 analytics layer for the Charac NHS pharmacy platform — prescription, delivery and consultation KPIs across pharmacy-owner and patient-facing portals; DirectQuery dashboards with NHS-calendar-aware SLA tracking.</li>
               <li>Drove +30% organic acquisition (12k → 15.6k monthly sign-ups) and −22% CAC via SQL segmentation and A/B testing across 20+ experiments.</li>
               <li>Built ±8% accuracy demand-forecast models in SQL/Python informing ~£200K revenue targeting.</li>
-              <li>Delivered Power BI executive dashboards with DAX and Power Query, cutting reporting cycle from 2 weeks to 2 days.</li>
-              <li>Reduced manual reporting effort by 50% through automated Python/SQL pipelines.</li>
-              <li>Managed GDPR-compliant data flows; implemented GA4 event taxonomy and connected to Power BI via BigQuery export.</li>
+              <li>Delivered Power BI executive dashboards with DAX and Power Query, cutting reporting cycle from 2 weeks to 2 days; reduced manual reporting effort by 45%.</li>
+              <li>Managed GDPR-compliant data flows under NHS Information Governance; GA4 event taxonomy connected to Power BI via BigQuery export.</li>
               <li>Achieved +12% retention improvement through cohort and RFM segmentation on 50k+ MAU.</li>
-            </ul>
-          </div>
-
-          <div class="cv-role-block">
-            <div class="cv-role-header">
-              <div>
-                <h3 class="cv-role-title">Analytics Consultant</h3>
-                <span class="cv-company">Charac (NHS-Integrated Pharmacy Platform)</span>
-              </div>
-              <span class="mono cv-period">2024 – Present</span>
-            </div>
-            <ul class="cv-bullets">
-              <li>Built Power BI + GA4 analytics layer for prescription, delivery, and consultation KPIs across pharmacy owner and patient-facing portals.</li>
-              <li>Designed DirectQuery Power BI dashboards with DAX measures for NHS-calendar-aware SLA tracking.</li>
-              <li>Implemented GA4 event taxonomy and BigQuery export pipeline; connected acquisition attribution to Power BI.</li>
-              <li>All work scoped within GDPR and NHS Information Governance requirements.</li>
             </ul>
           </div>
 
@@ -356,19 +340,19 @@ import Layout from '../layouts/Layout.astro';
   }
 
   .cv-bullets li {
+    display: flex;
+    gap: 0.5em;
+    align-items: baseline;
     font-size: 0.87rem;
     color: var(--text-mid);
     line-height: 1.65;
-    padding-left: 14px;
-    position: relative;
   }
 
   .cv-bullets li::before {
     content: '—';
-    position: absolute;
-    left: 0;
     color: var(--signal);
-    font-size: 0.75rem;
+    flex-shrink: 0;
+    font-size: inherit;
   }
 
   .cv-project-grid {

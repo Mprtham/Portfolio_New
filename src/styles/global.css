@@ -1,34 +1,32 @@
 @import "tailwindcss";
-@import "@fontsource/poppins/latin-500.css";
-@import "@fontsource/poppins/latin-600.css";
-@import "@fontsource/poppins/latin-700.css";
+@import "@fontsource/space-grotesk/latin-700.css";
+@import "@fontsource/space-grotesk/latin-500.css";
+@import "@fontsource/space-grotesk/latin-600.css";
 @import "@fontsource/inter/latin-400.css";
 @import "@fontsource/inter/latin-500.css";
 @import "@fontsource/inter/latin-600.css";
 @import "@fontsource/inter/latin-700.css";
-@import "@fontsource/space-grotesk/latin-500.css";
-@import "@fontsource/space-grotesk/latin-600.css";
 @import "@fontsource/jetbrains-mono/latin-400.css";
 @import "@fontsource/jetbrains-mono/latin-500.css";
 
 :root {
   /* Base / surfaces */
-  --ink-900: #0D0B08;
-  --ink-800: #151009;
-  --ink-700: #1E1610;
-  --line: #2A2018;
+  --ink-900: #0F0F0F;
+  --ink-800: #1C1C1E;
+  --ink-700: #161618;
+  --line: #2A2A2C;
 
   /* Text */
-  --text-hi: #F0EAD6;
-  --text-mid: #B8A99A;
-  --text-lo: #7A6E65;
+  --text-hi: #E8E4DE;
+  --text-mid: #B8B4AE;
+  --text-lo: #5A5650;
 
   /* Signal accent */
-  --signal: #E8A44A;
-  --signal-ink: #0D0B08;
+  --signal: #A3E635;
+  --signal-ink: #0F0F0F;
 
   /* Data-viz categorical */
-  --viz-1: #E8A44A;
+  --viz-1: #A3E635;
   --viz-2: #38BDF8;
   --viz-3: #A78BFA;
   --viz-4: #FBBF24;
@@ -36,7 +34,7 @@
   --viz-6: #94A3B8;
 
   /* Semantic */
-  --up: #E8A44A;
+  --up: #A3E635;
   --down: #FB7185;
 
   /* Spacing (8pt scale) */
@@ -63,15 +61,15 @@
 
 /* Light theme overrides */
 html.light {
-  --ink-900: #F7F4EE;
-  --ink-800: #EDE9DF;
-  --ink-700: #E2DDCF;
-  --line: #CFC9B8;
-  --text-hi: #1A1610;
-  --text-mid: #4A4438;
-  --text-lo: #8A8070;
-  --signal: #A06820;
-  --signal-ink: #FFFFFF;
+  --ink-900: #EDE9E0;
+  --ink-800: #FFFFFF;
+  --ink-700: #F5F2EB;
+  --line: #D6D0C8;
+  --text-hi: #1A1A1A;
+  --text-mid: #6B6560;
+  --text-lo: #8A8580;
+  --signal: #A3E635;
+  --signal-ink: #0F0F0F;
 }
 
 *, *::before, *::after {
@@ -134,7 +132,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'Poppins', system-ui, sans-serif;
+  font-family: 'Space Grotesk', system-ui, sans-serif;
   color: var(--text-hi);
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -194,14 +192,14 @@ section {
 
 .card:hover {
   transform: translateY(-3px);
-  border-color: rgba(232, 164, 74, 0.5);
-  box-shadow: 0 8px 32px rgba(232, 164, 74, 0.12), 0 0 0 1px rgba(232, 164, 74, 0.15);
+  border-color: rgba(163, 230, 53, 0.5);
+  box-shadow: 0 8px 32px rgba(163, 230, 53, 0.12), 0 0 0 1px rgba(163, 230, 53, 0.15);
 }
 
 @media (hover: none) {
   .card:active {
     transform: scale(0.98);
-    border-color: rgba(232, 164, 74, 0.35);
+    border-color: rgba(163, 230, 53, 0.35);
     transition: transform 80ms ease, border-color 80ms ease;
   }
 }
@@ -299,8 +297,8 @@ section {
   background: var(--text-lo);
 }
 
-::-moz-selection { background: #E8A44A; color: #0D0B08; }
-::selection      { background: #E8A44A; color: #0D0B08; }
+::-moz-selection { background: #A3E635; color: #0F0F0F; }
+::selection      { background: #A3E635; color: #0F0F0F; }
 
 /* View transition animation — fires on page-to-page navigation (not anchor scrolls) */
 @keyframes vtFadeOut {
