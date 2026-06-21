@@ -324,8 +324,8 @@ export default function AgentDemo() {
         }
 
         .ad-msg-user .ad-msg-body {
-          background: rgba(232, 164, 74, 0.08);
-          border: 1px solid rgba(232, 164, 74, 0.2);
+          background: rgba(163, 230, 53, 0.08);
+          border: 1px solid rgba(163, 230, 53, 0.2);
           color: var(--text-hi);
           border-radius: 12px 12px 2px 12px;
         }

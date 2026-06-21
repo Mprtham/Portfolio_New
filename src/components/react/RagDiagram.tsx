@@ -56,7 +56,7 @@ const NODES: Node[] = [
     label: 'Generate',
     sublabel: 'Azure OpenAI GPT-4o',
     detail: 'LLM receives [system prompt + reranked chunks + masked content + query]. Instructed to answer only from provided context and cite sources. Output guardrails check for hallucination signals.',
-    color: '#E8A44A',
+    color: '#A3E635',
     x: 400, y: 200,
   },
   {
@@ -64,7 +64,7 @@ const NODES: Node[] = [
     label: 'Cite + Track',
     sublabel: 'Langfuse + SQLite',
     detail: 'Every response includes citation markers. Langfuse traces the full pipeline: latency per step, token counts, cost per query. SQLite logs cost by role and query type for the admin dashboard.',
-    color: '#E8A44A',
+    color: '#A3E635',
     x: 220, y: 200,
   },
   {
@@ -119,7 +119,7 @@ export default function RagDiagram() {
               <line
                 key={`${from}-${to}`}
                 x1={x1} y1={y1} x2={x2} y2={y2}
-                stroke={isActive ? '#E8A44A' : '#2A2018'}
+                stroke={isActive ? '#A3E635' : '#2A2A2C'}
                 strokeWidth={isActive ? 1.5 : 1}
                 markerEnd="url(#arrow)"
                 style={{ transition: 'stroke 200ms, stroke-width 200ms' }}

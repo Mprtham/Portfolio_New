@@ -5,7 +5,7 @@ import Cursor from '../components/Cursor.astro';
 import CursorTrail from '../components/CursorTrail.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
 import { ClientRouter } from 'astro:transitions';
-import poppins600url from '@fontsource/poppins/files/poppins-latin-600-normal.woff2';
+import sg700url from '@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff2';
 
 interface Props {
   title?: string;
@@ -41,7 +41,7 @@ const ogImage = '/og.png';
     <title>{title}</title>
 
     <ClientRouter />
-    <link rel="preload" href={poppins600url} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={sg700url} as="font" type="font/woff2" crossorigin />
 
     <!-- JSON-LD Person schema -->
     <script type="application/ld+json" is:inline>

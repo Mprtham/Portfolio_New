@@ -76,7 +76,7 @@ const metrics = [
     width: clamp(300px, 50vw, 700px);
     height: clamp(300px, 50vw, 700px);
     border-radius: 50%;
-    background: radial-gradient(circle, rgba(232, 164, 74, 0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(163, 230, 53, 0.12) 0%, transparent 70%);
     filter: blur(60px);
     pointer-events: none;
     z-index: 0;
@@ -171,7 +171,7 @@ const metrics = [
   }
 
   .hero-thesis {
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     font-size: var(--step-2);
     font-weight: 500;
     color: var(--signal);
@@ -285,8 +285,8 @@ const metrics = [
   }
 
   .hero-char:hover {
-    color: #e8a44a;
-    text-shadow: 0 0 18px rgba(232, 164, 74, 0.55);
+    color: #A3E635;
+    text-shadow: 0 0 18px rgba(163, 230, 53, 0.55);
   }
 
   .hero-char-outline {
@@ -300,7 +300,7 @@ const metrics = [
     }
 
     .hero-char-outline:hover {
-      -webkit-text-stroke-color: #e8a44a;
+      -webkit-text-stroke-color: #A3E635;
     }
   }
 
@@ -397,7 +397,7 @@ const metrics = [
       if (end < 2) return;
       const seg = w / (NUM - 1);
       ctx.beginPath();
-      ctx.strokeStyle = '#E8A44A';
+      ctx.strokeStyle = '#A3E635';
       ctx.lineWidth = 1.5;
       ctx.lineCap = 'round';
       ctx.lineJoin = 'round';
@@ -412,7 +412,7 @@ const metrics = [
         const ty = h - points[end - 1] * h;
         ctx.beginPath();
         ctx.arc(tx, ty, 3, 0, Math.PI * 2);
-        ctx.fillStyle = '#E8A44A';
+        ctx.fillStyle = '#A3E635';
         ctx.fill();
       }
     }

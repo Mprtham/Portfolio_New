@@ -41,7 +41,7 @@
   }
 
   .counter {
-    font-family: 'Poppins', system-ui, sans-serif;
+    font-family: 'Space Grotesk', system-ui, sans-serif;
     font-size: clamp(64px, 12vw, 120px);
     font-weight: 700;
     color: var(--signal);
@@ -67,7 +67,7 @@
     width: 0%;
     will-change: width;
     transition: width 50ms linear;
-    box-shadow: 0 0 8px rgba(232, 164, 74, 0.5);
+    box-shadow: 0 0 8px rgba(163, 230, 53, 0.5);
   }
 </style>
 
@@ -111,4 +111,8 @@
 
     requestAnimationFrame(frame);
   })();
+
+  document.addEventListener('astro:after-swap', () => {
+    document.getElementById('loader-wrapper')?.remove();
+  });
 </script>
