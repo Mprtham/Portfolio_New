@@ -17,8 +17,8 @@ const clusters: Cluster[] = [
     name: 'BI & Visualisation',
     skills: [
       { name: 'Power BI (DAX, Copilot)', level: 95, label: 'Expert', projects: ['charac', 'peopleops'] },
-      { name: 'Tableau', level: 72, label: 'Proficient', projects: [] },
-      { name: 'Looker Studio', level: 70, label: 'Proficient', projects: [] },
+      { name: 'Tableau', level: 72, label: 'Intermediate', projects: [] },
+      { name: 'Looker Studio', level: 70, label: 'Intermediate', projects: [] },
       { name: 'Plotly / Recharts', level: 80, label: 'Advanced', projects: ['agentic-analyst'] },
       { name: 'Excel (Power Query)', level: 85, label: 'Advanced', projects: [] },
     ],
@@ -30,7 +30,7 @@ const clusters: Cluster[] = [
       { name: 'PostgreSQL', level: 90, label: 'Expert', projects: [] },
       { name: 'dbt', level: 82, label: 'Advanced', projects: ['peopleops', 'sql-forge'] },
       { name: 'ETL / ELT pipelines', level: 80, label: 'Advanced', projects: ['charac', 'peopleops'] },
-      { name: 'Airflow', level: 65, label: 'Proficient', projects: [] },
+      { name: 'Airflow', level: 65, label: 'Intermediate', projects: [] },
     ],
   },
   {
@@ -48,9 +48,9 @@ const clusters: Cluster[] = [
     skills: [
       { name: 'pandas / NumPy', level: 88, label: 'Advanced', projects: ['agentic-analyst', 'stock'] },
       { name: 'scikit-learn', level: 82, label: 'Advanced', projects: ['peopleops'] },
-      { name: 'Polars', level: 75, label: 'Proficient', projects: ['agentic-analyst'] },
-      { name: 'LSTM / Prophet', level: 72, label: 'Proficient', projects: ['stock'] },
-      { name: 'SHAP', level: 75, label: 'Proficient', projects: ['peopleops'] },
+      { name: 'Polars', level: 75, label: 'Intermediate', projects: ['agentic-analyst'] },
+      { name: 'LSTM / Prophet', level: 72, label: 'Intermediate', projects: ['stock'] },
+      { name: 'SHAP', level: 75, label: 'Intermediate', projects: ['peopleops'] },
     ],
   },
   {
@@ -58,8 +58,8 @@ const clusters: Cluster[] = [
     skills: [
       { name: 'LangGraph / ReAct agents', level: 85, label: 'Advanced', projects: ['sentinel', 'coder-buddy'] },
       { name: 'RAG pipelines', level: 82, label: 'Advanced', projects: ['rag-observatory', 'securequery'] },
-      { name: 'Qdrant / ChromaDB', level: 78, label: 'Proficient', projects: ['securequery', 'agentic-analyst', 'rag-observatory'] },
-      { name: 'Fine-tuning (LoRA / DPO)', level: 72, label: 'Proficient', projects: ['sql-forge'] },
+      { name: 'Qdrant / ChromaDB', level: 78, label: 'Intermediate', projects: ['securequery', 'agentic-analyst', 'rag-observatory'] },
+      { name: 'Fine-tuning (LoRA / DPO)', level: 72, label: 'Intermediate', projects: ['sql-forge'] },
       { name: 'FastAPI / Docker', level: 82, label: 'Advanced', projects: ['sentinel', 'rag-observatory', 'securequery', 'agentic-analyst'] },
     ],
   },
@@ -78,6 +78,8 @@ const projectLabels: Record<string, string> = {
 };
 
 const allProjects = Object.keys(projectLabels);
+
+const TIER_WIDTH: Record<string, number> = { Expert: 100, Advanced: 75, Intermediate: 50, Beginner: 25 };
 
 export default function SkillsFilter() {
   const [active, setActive] = useState<string | null>(null);
@@ -136,10 +138,10 @@ export default function SkillsFilter() {
                         <span className="sf-skill-name">{skill.name}</span>
                         <span className="sf-skill-label">{skill.label}</span>
                       </div>
-                      <div className="sf-bar-track" role="progressbar" aria-valuenow={skill.level} aria-valuemin={0} aria-valuemax={100} aria-label={`${skill.name}: ${skill.label}`}>
+                      <div className="sf-bar-track" role="progressbar" aria-valuenow={TIER_WIDTH[skill.label] ?? 50} aria-valuemin={0} aria-valuemax={100} aria-label={`${skill.name}: ${skill.label}`}>
                         <div
                           className="sf-bar-fill"
-                          style={{ width: (highlighted && mounted) ? `${skill.level}%` : '0%', transition: 'width 0.8s cubic-bezier(.22, 1, .36, 1)' }}
+                          style={{ width: (highlighted && mounted) ? `${TIER_WIDTH[skill.label] ?? 50}%` : '0%', transition: 'width 0.8s cubic-bezier(.22, 1, .36, 1)' }}
                         />
                       </div>
                     </div>
@@ -168,7 +170,7 @@ export default function SkillsFilter() {
           border-radius: 2px;
           font-family: 'JetBrains Mono', monospace;
           font-size: 0.72rem;
-          color: var(--text-lo);
+          color: var(--text-mid);
           cursor: pointer;
           transition: all 200ms;
           white-space: nowrap;
@@ -180,7 +182,7 @@ export default function SkillsFilter() {
         }
 
         .sf-chip-active {
-          background: rgba(232, 164, 74, 0.1);
+          background: rgba(163, 230, 53, 0.1);
           border-color: var(--signal);
           color: var(--signal);
         }
@@ -205,7 +207,7 @@ export default function SkillsFilter() {
 
         .sf-cluster-name {
           font-size: 1rem;
-          color: var(--signal);
+          color: var(--text-hi);
           font-family: 'Space Grotesk', sans-serif;
           font-weight: 600;
           margin-bottom: 20px;
@@ -238,13 +240,13 @@ export default function SkillsFilter() {
 
         .sf-skill-name {
           font-size: 0.83rem;
-          color: var(--text-mid);
+          color: var(--text-hi);
           font-family: 'Inter', sans-serif;
         }
 
         .sf-skill-label {
           font-size: 0.68rem;
-          color: var(--text-lo);
+          color: var(--text-mid);
           font-family: 'JetBrains Mono', monospace;
         }
 

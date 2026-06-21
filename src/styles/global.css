@@ -154,6 +154,13 @@ section {
   padding-bottom: clamp(88px, 10vw, 144px);
 }
 
+@media (max-width: 600px) {
+  section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+}
+
 /* Layout container */
 .container {
   width: 100%;
